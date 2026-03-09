@@ -36,7 +36,16 @@ $ARGUMENTS
 **검증 관점**: 교수 설계자, 비판적 교육자, 시간/자원 관리자, 학습자 대변인, 통합 판단자 (multi-agent-brainstorming 참조)
 **워크플로우**: Step 0(계획) → Step 1(발산) → Step 2(클러스터링) → Step 3(다관점 검증) → Step 4(우선순위+Bloom's) → Step 5(통합)
 **상세**: `.claude/agents/brainstorm-agent/AGENT.md`의 "강의구성안 브레인스토밍" 섹션 참조
-### Phase 4: 심화 리서치 → research-agent (브레인스토밍 결과 검증, 사례·참고문헌 수집)
+### Phase 4: 심화 리서치 → research-agent (deep-research 스킬 기반 검증·보충)
+
+**지시**: deep-research 스킬의 8단계 파이프라인에 따라 브레인스토밍 결과의 심화 리서치 요청 사항(§7)을 검증하고 자료를 보충하세요.
+**입력 파일**: `{output_dir}/brainstorm_result.md`, `{output_dir}/input_data.json`
+**참조 지침**: `.claude/skills/deep-research/SKILL.md` (리서치 방법론)
+**산출물 위치**: `{output_dir}/` (deep_research_plan.md, verification_results.md, supplement_results.md, research_deep.md)
+**모드**: 심화 (deep) — 구체적 해결책 수준까지 진입 가능 (고착 효과 필터 미적용)
+**제약**: 총 웹 검색 25회 이내, NBLM 재쿼리 3회 이내, 삼각검증 추가 5회 이내
+**워크플로우**: Step 0(입력 변환+계획) → Step 1(deep-research 8단계 수행) → Step 2(출력 정규화+통합)
+**상세**: `.claude/agents/research-agent/AGENT.md`의 "강의구성안 심화 리서치" 섹션 참조
 ### Phase 5: 아키텍처 설계 → architecture-agent
 ### Phase 6: 구성안 작성 → writer-agent
 ### Phase 7: 품질 검토 → review-agent
@@ -56,7 +65,10 @@ lectures/YYYY-MM-DD_{강의명}/01_outline/
 ├── idea_clusters.md             # Phase 3: 클러스터링 + 페르소나
 ├── review_result.md             # Phase 3: 다관점 검증 + Decision Log
 ├── brainstorm_result.md         # Phase 3: 브레인스토밍 최종 ★
-├── research_deep.md             # Phase 4: 심화 리서치
+├── deep_research_plan.md        # Phase 4: 심화 리서치 계획 (입력 변환)
+├── verification_results.md      # Phase 4: 검증 유형 수집 결과
+├── supplement_results.md        # Phase 4: 보충 유형 수집 결과
+├── research_deep.md             # Phase 4: 심화 리서치 최종 ★
 ├── architecture.md              # Phase 5: 아키텍처 설계
 ├── lecture_outline.md           # Phase 6: 최종 구성안 ★
 └── quality_review.md            # Phase 7: 품질 검토
