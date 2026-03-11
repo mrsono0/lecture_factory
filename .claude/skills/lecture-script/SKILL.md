@@ -103,7 +103,36 @@ $ARGUMENTS
 
 ### Phase 3: 브레인스토밍 → brainstorm-agent (발문, 활동, 사례 구상)
 
-<!-- TODO: Phase 3 프롬프트 구현 예정 -->
+**사전 처리** (오케스트레이터 수행):
+
+1. `{output_dir}/input_data.json`을 Read하여 추출:
+   - `script_config.teaching_model` → 한글 변환: `direct_instruction`→"직접교수법", `pbl`→"PBL", `flipped`→"플립러닝", `mixed`→"혼합"
+   - `script_config.activity_strategies` → 한글 변환: `individual_practice`→"개인 실습", `group_activity`→"그룹 활동", `discussion`→"토론·발문", `project`→"프로젝트"
+   - `source_outline.outline_path`, `source_outline.architecture_path` 추출
+2. `{output_dir}/research_exploration.md` 존재 확인
+
+**Agent 호출**:
+
+```
+- subagent_type: brainstorm-agent
+- prompt:
+
+탐색적 리서치 결과를 기반으로 교안에 필요한 발문, 학습활동, 실생활 사례, Gagne 9사태 구현 방안을 브레인스토밍하세요.
+
+**지시사항**: `.claude/agents/brainstorm-agent/AGENT.md`를 읽고 "강의교안 브레인스토밍 (Phase 3) 세부 워크플로우" 섹션을 따르세요.
+
+**스키마 참조**: `.claude/templates/input-schema-script.json` (필드 의미·유효값·관계 이해용)
+**입력**:
+- `{output_dir}/input_data.json`
+- `{output_dir}/research_exploration.md`
+**구성안 참조**: `{source_outline.outline_path}`, `{source_outline.architecture_path}`
+**산출물 위치**: `{output_dir}/`
+**교수 모델**: {teaching_model_한글}
+**활동 전략**: {activity_strategies_한글}
+**제약**: 도구 Read, Write만 사용. 외부 검색 없음. Agent 중첩 금지.
+```
+
+**완료 확인**: `{output_dir}/brainstorm_result.md` 존재 확인
 
 ### Phase 4: 심화 리서치 → research-agent (브레인스토밍 기반 예시·보충 콘텐츠 수집)
 
