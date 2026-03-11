@@ -546,7 +546,7 @@ lectures/
 | 프레임워크 | 적용 워크플로우 | 핵심 원칙 |
 |-----------|--------------|----------|
 | **Backward Design** | 구성안, 교안 | 학습결과 → 평가 → 학습경험 역순 설계 |
-| **GAIDE** | 구성안 | Setup → 초안 → 매크로 정제 → 마이크로 정제 → 통합 |
+| **GAIDE** | 구성안, 교안 | Setup → 초안 → 매크로 정제 → 마이크로 정제 → 통합 |
 | **Gagne 9사태** | 교안 | 주의획득 → 목표고지 → ... → 파지와 전이 촉진 (체크리스트 적용) |
 | **Hunter 6단계** | 교안 (직접교수법) | 목표 → 정보제공 → 시범 → 안내연습 → 독립연습 → 정리 |
 | **PBL 6단계** | 교안 (문제기반학습) | 문제제시 → 탐구계획 → 탐구수행 → 해결안개발 → 발표공유 → 성찰 |
@@ -561,6 +561,8 @@ lectures/
 | **deep-research 8단계** | 구성안 Phase 4, 교안 Phase 4 | Scope→Plan→Retrieve→Triangulate→Synthesize→Critique→Refine→Package (브레인스토밍 결과 심화 검증) |
 | **교수법 효과성 3중 검증** | 교안 Phase 4 | 효과 크기(d≥0.4) + 맥락 전이({target_learner} 적용 가능) + SLO 측정 타당성 |
 | **CMU Eberly 3점 형성평가 배치** | 교안 Phase 5 | Entry(도입 사태3 후)-During(전개 We Do 후)-Exit(정리 사태8) 3시점 배치 |
+| **Think-Aloud 메타인지 4대 패턴** | 교안 Phase 6 (I Do 단계) | 계획("먼저 ~부터") → 모니터링("맞는지 확인") → 평가("효과적인 이유는") → 자기교정("다시 해야겠습니다") — Cognitive Apprenticeship 모델링 |
+| **2-레이어 분리 표기법** | 교안 Phase 6 | 발화문(`> "..."`) vs 행동 지시(`[...]`) 시각 구분 — 강사가 발화/동작을 즉시 식별 가능한 실행 문서 포맷 |
 | **Context7 MCP 기술 문서 통합** | 교안 Phase 5-6 | 라이브러리 자동 판별 → resolve-library-id → get-library-docs → 최신 문서/코드 예제 수집 |
 | **Assertion-Evidence** | 슬라이드 | 주장 제목 + 시각 증거 (불릿포인트 대체) |
 
@@ -607,6 +609,13 @@ lectures/
 - Oregon GTF Manual, Ausubel (차시 간 전환 Preview-Review)
 - Study.com (강의 전환 전략)
 - CITL Illinois (PBL 수업 구조), Hunter 7단계 (직접교수법), CMU Flipped Classroom
+
+### 교안 작성 (Phase 6)
+- Collins, Brown, & Newman (1989). Cognitive Apprenticeship (Think-Aloud 모델링 전략 — 전문가 사고 과정 외현화)
+- Davey, B. (1983). Think-Aloud: Modeling the Cognitive Processes of Reading Comprehension
+- Rosenshine, B. (2012). Principles of Instruction (명시적 교수법 — I Do/We Do/You Do 발화 구조)
+- Lemov, D. (2015). Teach Like a Champion 2.0 (강사 대본 작성, 전환 문구, 발문 스크립팅)
+- Archer, A. & Hughes, C. (2011). Explicit Instruction (효과적 발화문 구조 — 3~5문장 청킹)
 
 ### 강의 · 교안 설계
 - Carnegie Mellon Eberly Center (강의계획서 설계)
