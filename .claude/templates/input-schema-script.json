@@ -1,0 +1,155 @@
+{
+  "$schema": "02_script/input_data.json 스키마 — 구성안 전체 필드 + script_config 확장",
+  "_note": "구성안 input_data.json의 모든 필드(topic, target_learner, learning_goals, format, schedule, keywords, prerequisites, exclusions, assessment, pedagogy, tone, tone_examples, reference_sources, context)가 최상위에 복사된 뒤, 아래 script_config와 source_outline이 추가된다.",
+
+  "script_config": {
+    "target_sessions": {
+      "type": "string",
+      "enum": ["all", "selected"],
+      "default": "all",
+      "description": "S0: 교안 작성 범위 — 'all'이면 전체 차시, 'selected'이면 selected_days 참조"
+    },
+    "selected_days": {
+      "type": "array",
+      "items": "number",
+      "default": [],
+      "description": "S0: target_sessions이 'selected'일 때 작성할 Day 번호 목록"
+    },
+    "teaching_model": {
+      "type": "string",
+      "enum": ["direct_instruction", "pbl", "flipped", "mixed"],
+      "description": "S1a: 교수 모델 — architecture.md 분석 후 사용자 확인"
+    },
+    "mixed_model_map": {
+      "type": "object",
+      "default": {},
+      "description": "S1a: 'mixed'일 때 Day별 교수 모델. 예: {\"1\": \"direct_instruction\", \"2\": \"pbl\"}"
+    },
+    "activity_strategies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["individual_practice", "group_activity", "discussion", "project"]
+      },
+      "description": "S1b: 활동 전략 목록 — architecture.md 분석 후 사용자 확인"
+    },
+    "script_detail_level": {
+      "type": "string",
+      "const": "full_script",
+      "description": "S2: 고정값 — 초보 강사가 교안+대본만 보고 강의할 수 있도록 L5 완전 스크립트"
+    },
+    "formative_assessment": {
+      "type": "object",
+      "description": "S3: architecture.md §3-2 형성평가 계획에서 자동 추출",
+      "properties": {
+        "primary_type": {
+          "type": "string",
+          "enum": ["sectional_check", "exit_ticket", "practice_integrated", "mixed"],
+          "description": "가장 빈번한 형성평가 유형. 복수 유형이 혼재하면 'mixed'"
+        },
+        "assessment_plan": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "session": { "type": "string", "description": "차시 (예: D1-6)" },
+              "type": { "type": "string", "description": "평가 유형 (sectional_check/exit_ticket/practice_integrated)" },
+              "target_slo": { "type": "array", "items": "string", "description": "대상 SLO 목록" },
+              "method": { "type": "string", "description": "구체적 방법 (예: 설치 성공 화면 캡처)" },
+              "duration_min": { "type": "number", "description": "소요 시간(분)" }
+            }
+          },
+          "description": "차시별 형성평가 계획 목록"
+        },
+        "slo_coverage": {
+          "type": "object",
+          "description": "SLO별 평가 커버 여부. 예: {\"SLO1-1\": true, \"SLO1-2\": true}"
+        }
+      }
+    },
+    "time_ratio": {
+      "type": "object",
+      "description": "S4: 교수 모델에서 자동 파생되는 도입:전개:정리 비율",
+      "properties": {
+        "intro": { "type": "number", "description": "도입 비율(%)" },
+        "main": { "type": "number", "description": "전개 비율(%)" },
+        "wrap": { "type": "number", "description": "정리 비율(%)" }
+      }
+    },
+    "reference_sources": {
+      "type": "object",
+      "description": "S5: 구성안 참고자료 상속 + 인터넷 리서치 기본 활성화",
+      "properties": {
+        "local_folders": {
+          "type": "array",
+          "items": "string",
+          "description": "로컬 참고자료 경로 (구성안 reference_sources.local_folders 상속)"
+        },
+        "notebooklm_urls": {
+          "type": "array",
+          "items": "string",
+          "description": "NotebookLM URL (구성안 reference_sources.notebooklm_urls 상속)"
+        },
+        "web_research": {
+          "type": "boolean",
+          "default": true,
+          "description": "인터넷 리서치 활성화 여부 (기본: true)"
+        }
+      }
+    },
+    "bloom_question_map": {
+      "type": "object",
+      "description": "S6: architecture.md 차시별 Bloom's 수준에서 자동 생성",
+      "properties": {
+        "per_session": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "session": { "type": "string", "description": "차시 (예: D1-3)" },
+              "bloom_level": { "type": "string", "description": "해당 차시 Bloom's 수준 (예: 이해·적용)" },
+              "intro_question_level": { "type": "string", "description": "도입 발문 수준 (예: L1~L2)" },
+              "main_question_level": { "type": "string", "description": "전개 발문 수준 (예: L2~L3)" },
+              "wrap_question_level": { "type": "string", "description": "정리 발문 수준 (예: L2)" }
+            }
+          },
+          "description": "차시별 수업 단계별 발문 수준 매핑"
+        }
+      }
+    },
+    "gagne_application": {
+      "type": "string",
+      "const": "checklist",
+      "description": "S6: Gagne 9사태 고정값 — Phase 7 review-agent가 누락 검증"
+    },
+    "instructional_model_map": {
+      "type": "object",
+      "description": "teaching_model에서 자동 파생. Phase 5~6 에이전트 참조용",
+      "properties": {
+        "primary_model": { "type": "string", "description": "주 교수설계 모델 (Hunter_6step/PBL_6step/Before_During_After)" },
+        "secondary_model": { "type": "string", "description": "보조 모델 (Gagne 등)" },
+        "grr_focus": { "type": "string", "description": "GRR 중심 단계 (i_do_we_do_you_do/you_do_together/we_do_you_do_together)" },
+        "bloom_question_pattern": { "type": "string", "description": "발문 수준 패턴 (예: L1-L2→L2-L3→L3-L4→L2-L3)" }
+      }
+    }
+  },
+
+  "source_outline": {
+    "lecture_root": {
+      "type": "string",
+      "description": "강의 루트 폴더 경로 (예: lectures/2026-03-10_claude-code-활용)"
+    },
+    "outline_path": {
+      "type": "string",
+      "description": "01_outline/lecture_outline.md 전체 경로"
+    },
+    "architecture_path": {
+      "type": "string",
+      "description": "01_outline/architecture.md 전체 경로 (존재 시)"
+    },
+    "outline_input_path": {
+      "type": "string",
+      "description": "01_outline/input_data.json 전체 경로"
+    }
+  }
+}
