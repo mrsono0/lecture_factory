@@ -165,30 +165,74 @@ Phase 5(아키텍처 설계)에서 일별 시간표를 자동 생성하여 Phase
 
 | Phase | 단계 | 에이전트 | 핵심 작업 |
 |-------|------|---------|----------|
-| 1 | 입력 수집 | input-agent | 구성안 로드, 교수법 선택(직접교수/PBL/플립러닝/액티브러닝) |
+| 1 | 입력 수집 | input-agent | 구성안 3파일 로드 + S0~S6 자동 추론/확인 (AskUserQuestion 1회) → input_data.json |
 | 2 | 탐색적 리서치 | research-agent | 교수법 사례, 유사 교안 벤치마킹, 실생활 사례 탐색 (방향 설정) |
 | 3 | 브레인스토밍 | brainstorm-agent | 발문 설계(Bloom's 기반), 학습활동 아이디어, 실생활 사례 구상 |
 | 4 | 심화 리서치 | research-agent | 브레인스토밍 기반 예시 자료, 보충 콘텐츠, 참고 문헌 |
-| 5 | 교안 구조 설계 | architecture-agent | 도입-전개-정리(10:70:20), Gagne 9가지 수업사태 적용, 시간 배분 |
-| 6 | 교안 작성 | writer-agent | script-template.md 기반, 섹션별 스크립트/발문/활동/평가문항/발표자 노트 |
-| 7 | 품질 검토 | review-agent | 목표-활동-평가 정렬, 시간 배분 현실성, 용어/톤 일관성 |
+| 5 | 교안 구조 설계 | architecture-agent | 교수 모델별 도입-전개-정리 비율, Gagne 9사태 적용, SLO별 형성평가 배정, 시간 배분 |
+| 6 | 교안 작성 | writer-agent | full_script(L5) 완전 스크립트 — 교안(학습 내용) + 강사대본(발화문) + 발문 + 활동 + 평가문항 |
+| 7 | 품질 검토 | review-agent | 목표-활동-평가 정렬, Gagne 9사태 체크리스트, 시간 배분 현실성, 용어/톤 일관성 |
 
 **적용 프레임워크**:
-- Madeline Hunter 8단계 (직접교수법)
-- Gagne의 9가지 수업사태
-- Gradual Release of Responsibility (I Do → We Do → You Do)
+- Madeline Hunter 6단계 (직접교수법)
+- PBL 6단계 (문제기반학습)
+- Before/During/After (플립러닝)
+- Gagne의 9가지 수업사태 (체크리스트)
+- GRR — Gradual Release of Responsibility (I Do → We Do → You Do)
+- Bloom's Taxonomy 기반 발문 수준 자동 매핑
 
-**교안 구조**:
+**교안 구조** (교수 모델별 자동 비율):
 ```
-도입 (10-15%): 주의집중 → 동기부여 → 선수학습 확인 → 학습목표 제시
-전개 (70-80%): 내용제시 → 시범 → 안내연습 → 독립연습 (× 섹션 수)
-정리 (10-15%): 핵심요약 → 실천방법 → 과제안내 → 차시예고
+직접교수법:  도입 10% / 전개 60% / 정리 30%  (GRR: I Do → We Do → You Do)
+PBL:        도입 10% / 전개 75% / 정리 15%  (GRR: You Do Together 중심)
+플립러닝:    도입  5% / 전개 80% / 정리 15%  (GRR: We Do → You Do Together)
+혼합:       도입 10% / 전개 70% / 정리 20%  (차시별 모델 지정)
 ```
+
+**스크립트 상세도**: `full_script`(L5) 고정 — 초보 강사가 교안+대본만 보고 강의 가능
+
+#### Phase 1: 입력 수집 상세
+
+구성안의 3개 파일을 로드하고, architecture.md를 분석하여 교수 모델·활동 전략을 자동 추론합니다.
+
+**Step 0: 이전 산출물 탐색 + 로드**
+- `lectures/*/01_outline/lecture_outline.md` 스캔 → 구성안 폴더 선택
+- 로드 대상 3파일: `lecture_outline.md`, `input_data.json`, `architecture.md`
+- `02_script/` 폴더 자동 생성
+
+**Step 1: AskUserQuestion 1회** — S0 + S1a(확인) + S1b(확인)
+
+| # | 카테고리 | 질문 | 입력 형태 | 기본값 |
+|---|---------|------|----------|--------|
+| S0 | 교안 작성 범위 | 전체 차시 / 특정 차시 선택 | 단일 선택 | 전체 차시 |
+| S1a | 교수 모델 | 직접교수법 / PBL / 플립러닝 / 혼합 | 단일 선택 | architecture.md 자동 추론 결과 "(추천)" |
+| S1b | 활동 전략 | 개인실습 / 그룹활동 / 토론·발문 / 프로젝트 | 복수 선택 | architecture.md 자동 추론 결과 |
+
+**S1a 자동 추론 알고리즘**:
+1. architecture.md §4-2 차시 테이블 "활동 유형" 열에서 키워드 카운팅
+2. 직접교수법("안내 실습", "시범"), PBL("프로젝트", "탐구"), 플립러닝("사전학습", "플립") 점수 산출
+3. 최고 점수 모델이 전체 50% 이상 → 해당 모델 추천, 미만 → "혼합" 추천
+4. 1차 실패 시 pedagogy 텍스트에서 폴백 추론
+
+**Step 2: 자동 결정 (질문 없음)** — S2~S6
+
+| # | 카테고리 | 자동 결정 방법 |
+|---|---------|--------------|
+| S2 | 스크립트 상세도 | `full_script` 고정 (초보 강사가 교안+대본만 보고 강의 가능) |
+| S3 | 형성평가 | architecture.md §3-2 형성평가 계획에서 자동 추출 → 유형 분류 + SLO 커버리지 검증 |
+| S4 | 시간 비율 | S1a 교수 모델에서 자동 파생 (직접교수: 10/60/30, PBL: 10/75/15 등) |
+| S5 | 참고자료 | 구성안 local_folders + notebooklm_urls 상속 + 인터넷 리서치 기본 활성화 |
+| S6 | 발문·Gagne | Bloom's 수준별 발문 자동 매핑 + Gagne 9사태 체크리스트 고정 |
+
+**Step 3**: 자동 결정 요약 출력 (사용자 확인용)
+**Step 4**: `02_script/input_data.json` 생성
+
+스키마: `.claude/templates/input-schema-script.json` 참조
 
 **데이터 흐름**:
 ```
-구성안 로드 → input_data.json → research_exploration.md → brainstorm_result.md
-→ research_deep.md → architecture.md → lecture_script.md → quality_review.md
+구성안 3파일 로드 → input_data.json → research_exploration.md → brainstorm_result.md
+→ research_deep.md → architecture.md → lecture_script.md (교안+강사대본) → quality_review.md
 ```
 
 **산출물**: `lectures/YYYY-MM-DD_{강의명}/02_script/lecture_script.md`
@@ -307,8 +351,12 @@ lectures/
 |-----------|--------------|----------|
 | **Backward Design** | 구성안, 교안 | 학습결과 → 평가 → 학습경험 역순 설계 |
 | **GAIDE** | 구성안 | Setup → 초안 → 매크로 정제 → 마이크로 정제 → 통합 |
-| **Gagne 9사태** | 교안 | 주의획득 → 목표고지 → ... → 파지와 전이 촉진 |
-| **Hunter 8단계** | 교안 | 선행조직자 → 목표 → 정보제공 → 시범 → 이해확인 → 연습 → 정리 |
+| **Gagne 9사태** | 교안 | 주의획득 → 목표고지 → ... → 파지와 전이 촉진 (체크리스트 적용) |
+| **Hunter 6단계** | 교안 (직접교수법) | 목표 → 정보제공 → 시범 → 안내연습 → 독립연습 → 정리 |
+| **PBL 6단계** | 교안 (문제기반학습) | 문제제시 → 탐구계획 → 탐구수행 → 해결안개발 → 발표공유 → 성찰 |
+| **Before/During/After** | 교안 (플립러닝) | 사전학습 확인 → 심화활동 → 적용·정리 |
+| **GRR** | 교안 | I Do(시범) → We Do(안내연습) → You Do(독립연습) — 교수 모델별 중심 단계 상이 |
+| **Bloom's 발문 매핑** | 교안 | 차시별 Bloom's 수준에 따른 수업 단계별 발문 수준 자동 배정 |
 | **QM Rubric** | 품질 검토 | 8개 일반 기준, 목표-활동-평가 정렬 |
 | **2-Pass Research** | 구성안, 교안 | 탐색적 리서치(문제 공간) → 브레인스토밍 → 심화 리서치(아이디어 검증) |
 | **Assertion-Evidence** | 슬라이드 | 주장 제목 + 시각 증거 (불릿포인트 대체) |
