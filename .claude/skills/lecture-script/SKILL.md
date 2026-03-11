@@ -134,9 +134,45 @@ $ARGUMENTS
 
 **완료 확인**: `{output_dir}/brainstorm_result.md` 존재 확인
 
-### Phase 4: 심화 리서치 → research-agent (브레인스토밍 기반 예시·보충 콘텐츠 수집)
+### Phase 4: 심화 리서치 → research-agent (브레인스토밍 기반 교수법 검증·활동 보충)
 
-<!-- TODO: Phase 4 프롬프트 구현 예정 -->
+**사전 처리** (오케스트레이터 수행):
+1. `{output_dir}/input_data.json` Read:
+   - `script_config.teaching_model` → 한글 변환 (direct_instruction→직접교수, pbl→문제기반학습, flipped→거꾸로교실, mixed→혼합)
+   - `script_config.reference_sources` → local_folders, notebooklm_urls, web_research 추출
+   - `script_config.instructional_model_map` → primary_model, grr_focus 추출
+   - `script_config.formative_assessment` → primary_type, assessment_plan 추출
+   - `source_outline.outline_path`, `source_outline.architecture_path` 추출
+2. `{output_dir}/brainstorm_result.md` 존재 확인 (Phase 3 산출물)
+3. `brainstorm_result.md` §7 테이블 파악: 요청 건수, 유형별 분포, 높음 우선순위 비율
+
+**Agent 호출**:
+
+```
+subagent_type: research-agent
+prompt: |
+  당신은 교안 심화 리서치 에이전트입니다.
+  `.claude/agents/research-agent/AGENT.md`를 읽고 "강의교안 심화 리서치 (Phase 4) 세부 워크플로우" 섹션의 Step 0~2를 실행하세요.
+
+  **입력 파일**:
+  - brainstorm_result.md: `{output_dir}/brainstorm_result.md` (§1·§2·§5·§7 참조)
+  - input_data.json: `{output_dir}/input_data.json`
+  - 스키마 참조: `.claude/templates/input-schema-script.json`
+  - 구성안 참조: `{source_outline.outline_path}`, `{source_outline.architecture_path}` (변경 불가 기준)
+
+  **교수 모델**: {teaching_model_한글} ({script_config.teaching_model})
+  **검증 초점**: 교수법 효과성 검증 (효과 크기 + 맥락 전이 + SLO 측정 타당성)
+  **산출물 위치**: `{output_dir}/`
+
+  **제약**:
+  - 웹 검색: 25회 이내
+  - NBLM 쿼리: 5회 이내
+  - 삼각검증 추가 검색: 5회 이내
+  - 3자료원(로컬·NBLM·웹) 모두 순차 실행 필수
+  - Anti-Hallucination Protocol 필수 적용
+```
+
+**완료 확인**: `{output_dir}/research_deep.md` 존재 확인
 
 ### Phase 5: 교안 구조 설계 → architecture-agent (도입-전개-정리, Gagne 9사태)
 
