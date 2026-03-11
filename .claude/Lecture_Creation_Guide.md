@@ -271,6 +271,42 @@ PBL:        도입 10% / 전개 75% / 정리 15%  (GRR: You Do Together 중심)
 
 상세 워크플로우: `.claude/agents/research-agent/AGENT.md` "강의교안 탐색적 리서치 (Phase 2)" 섹션 참조
 
+#### Phase 3: 브레인스토밍 상세
+
+구성안 Phase 3이 "무엇을 가르칠까(What)"를 발산했다면, 교안 Phase 3은 **"어떻게 가르칠까(How)"**를 발산합니다.
+
+- **핵심 차이**: 구성안은 하위 주제 도출 → 교안은 발문·활동·사례·Gagne 구현 방안 도출
+- **Step 0~5 흐름**: 입력 로드(4파일) → 발산(4기법×4카테고리) → 차시별 매핑 → 다관점 검증(3역할) → Bloom's 발문+Gagne 매핑+활동 구체화 → 통합
+
+**교안 특화 4가지 발산 기법**:
+
+| # | 기법 | 생성 대상 |
+|---|------|----------|
+| 1 | HMW(How Might We) 재구성 | 학습활동, 설명 전략 |
+| 2 | 학제간 융합 | 학습활동, 실생활 사례 |
+| 3 | SCAMPER 활동 설계 | 학습활동, 형성평가 |
+| 4 | 강제 제약 + Magic Wand | 발문, 도입부 훅, 설명 전략 |
+
+**3개 검증 관점** (구성안 5개에서 축소 — 구조는 이미 확정, 실행 현실성만 검증):
+
+| 역할 | 검증 대상 |
+|------|----------|
+| 비판적 교육자 | SLO-활동 정렬, Bloom's 적합성, Gagne 누락 |
+| 학습자 대변인 | 인지 부하, 동기 유발, 난이도 |
+| 시간 관리자 | 활동 소요 시간, time_ratio 준수 |
+
+**산출물 구조** (`brainstorm_result.md` §1~§8):
+1. 차시별 발문 설계 (Bloom's × Socratic)
+2. 학습활동 아이디어 (GRR × 차시)
+3. 실생활 사례·훅 목록
+4. 설명 전략·비유 목록
+5. Gagne 9사태 구현 방안
+6. 학습자 오개념·장벽 해소 전략
+7. 심화 리서치 요청 사항 (Phase 4 전달용)
+8. Decision Log (ADOPT/REVISE/DROP/MERGE)
+
+상세 워크플로우: `.claude/agents/brainstorm-agent/AGENT.md` "강의교안 브레인스토밍 (Phase 3)" 섹션 참조
+
 **데이터 흐름**:
 ```
 구성안 3파일 로드 → input_data.json → research_exploration.md → brainstorm_result.md
