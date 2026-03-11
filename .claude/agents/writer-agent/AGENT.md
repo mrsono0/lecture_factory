@@ -448,23 +448,69 @@ Step 0: 입력 로드 + 검증 (GAIDE Setup)
 | 조건 | 모드 | Part 수 |
 |------|------|---------|
 | `total_sessions ≤ 10` | 단일 모드 | 1 |
-| `total_sessions > 10` | Day별 분할 | days + 2 |
+| `total_sessions > 10` | 블록별 분할 | blocks + 2 |
 
-#### Day별 분할 모드 (예: 3일 24교시 → 5 Part)
+블록 수와 경계는 오케스트레이터가 architecture.md 시간표를 파싱하여 동적으로 결정한다:
+- 각 Day에 30분 이상 공백(점심 등)이 있고 `sessions_in_day ≥ 6`이면 AM/PM 2블록으로 분할
+- 그 외에는 Day 전체를 1블록으로 처리
+- 블록 ID: `D{day}_{AM|PM}` (분할 시) 또는 `D{day}` (미분할 시)
+
+#### 블록별 분할 모드 (동적)
 
 | Part | 범위 | Step | 동작 |
 |------|------|------|------|
-| Part 1/{N} | §1~§3 | Step 0~2 | Write 신규 생성 |
-| Part 2/{N} | §4 Day 1 교안 | Step 3 (Day 1만) | Read 기존 + append |
-| ... | §4 Day K 교안 | Step 3 (Day K만) | Read 기존 + append |
-| Part {N-1}/{N} | §4 Day {days} 교안 | Step 3 (마지막 Day) | Read 기존 + append |
+| Part 0/{N} | §1~§3 | Step 0~2 | Write 신규 생성 |
+| Part 1/{N} | §4 blocks[0] 세션들 | Step 3 (블록 세션만) | Read 기존 + append |
+| ... | §4 blocks[K] 세션들 | Step 3 (블록 세션만) | Read 기존 + append |
+| Part B/{N} | §4 blocks[B-1] 세션들 | Step 3 (마지막 블록) | Read 기존 + append |
 | Part {N}/{N} | §5~§8 | Step 4~5 | Read 기존 + append |
+
+**예시: 3일×8시간 (6블록 → 8 Part)**
+
+| Part | 범위 | 세션 |
+|------|------|------|
+| Part 0/8 | §1~§3 | - |
+| Part 1/8 | §4 D1-AM | D1-1, D1-2, D1-3, D1-4 |
+| Part 2/8 | §4 D1-PM | D1-5, D1-6, D1-7, D1-8 |
+| Part 3/8 | §4 D2-AM | D2-1, D2-2, D2-3, D2-4 |
+| Part 4/8 | §4 D2-PM | D2-5, D2-6, D2-7, D2-8 |
+| Part 5/8 | §4 D3-AM | D3-1, D3-2, D3-3, D3-4 |
+| Part 6/8 | §4 D3-PM | D3-5, D3-6, D3-7, D3-8 |
+| Part 7/8 | §5~§8 | - |
+
+**예시: 3일×4시간 (3블록 → 5 Part)**
+
+| Part | 범위 | 세션 |
+|------|------|------|
+| Part 0/5 | §1~§3 | - |
+| Part 1/5 | §4 D1 | D1-1, D1-2, D1-3, D1-4 |
+| Part 2/5 | §4 D2 | D2-1, D2-2, D2-3, D2-4 |
+| Part 3/5 | §4 D3 | D3-1, D3-2, D3-3, D3-4 |
+| Part 4/5 | §5~§8 | - |
 
 #### 분할 모드 공통 규칙
 
 - 각 Part는 이전 Part가 작성한 내용을 수정하지 않는다 (append only)
 - 이어쓰기 시 이전 내용 끝에 빈 줄 1개 추가 후 새 내용을 작성한다
 - 각 Part는 메타데이터 헤더(차시, 교수모델, SLO)를 Part 입력 컨텍스트로 제공받는다
+- 오케스트레이터가 prompt에 `블록 세션` 목록을 전달하므로, 해당 세션만 작성한다
+
+#### revision 모드 (블록 재작성)
+
+Phase 7 블록별 검토에서 REVISION_REQUIRED 판정 시, 해당 블록 세션만 재작성하는 모드.
+
+| 항목 | 내용 |
+|------|------|
+| 입력 | `lecture_script.md` (기존 전체), `_review_block_{block_id}.md` (위반 목록 + 수정 가이드) |
+| 도구 | Read, Edit |
+| 산출물 | `lecture_script.md` (해당 블록 세션만 교체) |
+
+**동작**:
+1. `lecture_script.md` Read → 해당 블록 세션 위치 식별 (§4 내 D{N}-{M} 헤딩 기준)
+2. `_review_block_{block_id}.md` Read → Major 위반 사항 + 수정 가이드 추출
+3. 해당 블록 세션만 재작성 (다른 세션은 **절대 수정하지 않는다**)
+4. Edit 도구로 해당 세션 부분만 교체 (append가 아닌 replace)
+5. 재작성 시에도 Gagne ≥ 7/9, GRR 순서, 시간 합산 준수
 
 ---
 
