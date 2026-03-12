@@ -169,7 +169,7 @@ Step 0: 입력 로드 (5개 파일)
 
 **산출물**: `01_outline/quality_review.md` (§1 검토 요약 → §2 검증 상세 → §3 Major → §4 Minor → §5 우수 → §6 수정 우선순위 → §7 최종 판정)
 
-상세 워크플로우: `.claude/agents/review-agent/AGENT.md` "강의구성안 품질 검토 (Phase 7) 세부 워크플로우" 섹션 참조
+상세 워크플로우: `.claude/agents/review-agent/AGENT.md` 라우팅 → `outline-review.md` 참조
 
 #### 시간표 자동 생성
 
@@ -536,7 +536,7 @@ for block in blocks:
 - **CONDITIONAL PASS**: Major 0개 + Minor ≥ 4
 - **REVISION REQUIRED**: Major ≥ 1
 
-상세 워크플로우: `.claude/agents/review-agent/AGENT.md` "강의교안 품질 검토 (Phase 7) 세부 워크플로우" 섹션 참조
+상세 워크플로우: `.claude/agents/review-agent/AGENT.md` 라우팅 → `script-review.md` 참조
 
 #### Phase 8: 2단계 병합 + 최종 검토 — session→block→lecture_script 병합 + 구조 완전성 + 블록 간 일관성
 
