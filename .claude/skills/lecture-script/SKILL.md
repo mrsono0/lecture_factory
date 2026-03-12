@@ -500,7 +500,7 @@ prompt: |
   블록 {block_id} 세션들의 품질을 검토하세요.
 
   **지시사항**: `.claude/agents/review-agent/AGENT.md`를 읽고
-  "강의교안 품질 검토 (Phase 7) 세부 워크플로우" 섹션의
+  라우팅에 따라 `script-review.md`를 로드하여
   **블록별 검토 모드**를 따르세요.
 
   **검증 대상**: `{output_dir}/session_D{day}-{num}.md` (해당 블록의 차시 파일들: {session_list})
@@ -626,7 +626,7 @@ prompt: |
   lecture_script.md의 전체 통합 품질을 최종 검토하세요.
 
   **지시사항**: `.claude/agents/review-agent/AGENT.md`를 읽고
-  "강의교안 품질 검토 (Phase 7) 세부 워크플로우" 섹션의
+  라우팅에 따라 `script-review.md`를 로드하여
   **통합 검토 모드**를 따르세요.
 
   **검증 대상**: `{output_dir}/lecture_script.md` (전체)
