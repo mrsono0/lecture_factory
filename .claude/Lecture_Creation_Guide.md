@@ -114,7 +114,7 @@ Q11 참고 자료는 Q6 직후 수집하며, **경로/URL만 수집** — 실제
 - 패턴 출처: `langchain-ai/deepagents@web-research` (참조용 설치)
 - 4자료원 통합: input_data.json + 로컬 참고자료 + NotebookLM + 인터넷 리서치
 - 5단계 통합 알고리즘: 주제 축 추출 → 축별 배정 → 교차검증(삼각측량) → 고착효과 필터 → 구조화 작성
-- 상세 워크플로우: `.claude/agents/research-agent/AGENT.md` 참조
+- 상세 워크플로우: `.claude/agents/research-agent/AGENT.md` (라우팅) → 워크플로우별 파일 참조
 
 #### Phase 4 심화 리서치 — deep-research 스킬 적용
 
@@ -312,7 +312,7 @@ PBL:        도입 20% (10분) / 전개 70% (35분) / 정리 10% (5분)  (GRR: W
 6. 참고자료 분석 요약
 7. 리서치 인사이트 (Phase 3 브레인스토밍용, SLO + activity_strategy + Bloom's 수준 태깅)
 
-상세 워크플로우: `.claude/agents/research-agent/AGENT.md` "강의교안 탐색적 리서치 (Phase 2)" 섹션 참조
+상세 워크플로우: `.claude/agents/research-agent/AGENT.md` 라우팅 → `script-exploration.md` 참조
 
 #### Phase 3: 브레인스토밍 상세
 
@@ -390,7 +390,7 @@ PBL:        도입 20% (10분) / 전개 70% (35분) / 정리 10% (5분)  (GRR: W
 
 **제약**: 웹 25회, NBLM 5회, 삼각검증 추가 5회 이내
 
-상세 워크플로우: `.claude/agents/research-agent/AGENT.md` "강의교안 심화 리서치 (Phase 4) 세부 워크플로우" 섹션 참조
+상세 워크플로우: `.claude/agents/research-agent/AGENT.md` 라우팅 → `script-deep.md` 참조
 
 #### Phase 5: 교안 구조 설계 상세
 

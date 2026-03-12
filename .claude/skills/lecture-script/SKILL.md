@@ -119,7 +119,7 @@ if all gate_items == PASS:
 
 강의교안을 위한 탐색적 리서치를 수행하세요.
 
-**지시사항**: `.claude/agents/research-agent/AGENT.md`를 읽고 "강의교안 탐색적 리서치 (Phase 2) 세부 워크플로우" 섹션을 따르세요.
+**지시사항**: `.claude/agents/research-agent/AGENT.md`를 읽고 라우팅에 따라 `script-exploration.md`를 로드하여 따르세요.
 
 **스키마 참조**: `.claude/templates/input-schema-script.json` (필드 의미·유효값·관계 이해용)
 **입력**: `{output_dir}/input_data.json`
@@ -184,7 +184,7 @@ if all gate_items == PASS:
 subagent_type: research-agent
 prompt: |
   당신은 교안 심화 리서치 에이전트입니다.
-  `.claude/agents/research-agent/AGENT.md`를 읽고 "강의교안 심화 리서치 (Phase 4) 세부 워크플로우" 섹션의 Step 0~2를 실행하세요.
+  `.claude/agents/research-agent/AGENT.md`를 읽고 라우팅에 따라 `script-deep.md`를 로드하여 Step 0~2를 실행하세요.
 
   **입력 파일**:
   - brainstorm_result.md: `{output_dir}/brainstorm_result.md` (§1·§2·§5·§7 참조)
