@@ -151,7 +151,9 @@ null (제약 없음)
   │     ├─ S0: 기본값 "전체 차시"
   │     ├─ S1a: architecture.md 활동 유형 키워드 분석 → 교수 모델 추론
   │     ├─ S1b: architecture.md 활동 유형 키워드 분석 → 활동 전략 추론
-  │     └─ S2~S6: 기존 자동 결정 로직
+  │     ├─ S2~S4: 기존 자동 결정 로직
+  │     ├─ S4b: teaching_model → instructional_model_map 자동 파생
+  │     └─ S5~S6: 기존 자동 결정 로직
   │
   ├── Step 2: 전체 설정 요약 + 사용자 확인 — AskUserQuestion 1회
   │     └─ S0~S6 전체 요약 출력 → "이 설정으로 진행할까요?" 확인
@@ -246,6 +248,19 @@ architecture.md가 없으면 → `primary_type: "sectional_check"` 기본값 적
 | pbl | 10 | 75 | 15 |
 | flipped | 5 | 80 | 15 |
 | mixed | 10 | 70 | 20 |
+
+#### S4b. 교수설계 모델 매핑 → S1a 교수 모델에서 자동 파생
+
+S1a에서 결정된 `teaching_model`을 기반으로 `instructional_model_map`을 자동 생성한다.
+
+| teaching_model | primary_model | secondary_model | grr_focus | bloom_question_pattern |
+|---------------|--------------|----------------|-----------|----------------------|
+| direct_instruction | Hunter_6step | Gagne | i_do_we_do_you_do | L1-L2→L2-L3→L3-L4→L2-L3 |
+| pbl | PBL_6step | Gagne | you_do_together | L4-L5→L3-L4→L5-L6→L5-L6 |
+| flipped | Before_During_After | Gagne | we_do_you_do_together | L2-L3→L3-L4→L4-L5→L5 |
+| mixed | Hunter_6step | Gagne | i_do_we_do_you_do | L1-L2→L2-L3→L3-L4→L2-L3 |
+
+`mixed`일 경우 `mixed_model_map`의 Day별 모델에 따라 해당 Day의 매핑을 개별 적용한다. 기본 매핑은 `direct_instruction` 기준.
 
 #### S5. 참고자료 → 구성안 상속 + 인터넷 리서치 기본
 
@@ -351,6 +366,7 @@ S1b pedagogy 폴백:
 • 스크립트 상세도(S2): 완전 스크립트 (L5) — 초보 강사용
 • 형성평가(S3): {S3 결과} — architecture.md 기반
 • 시간 비율(S4): 도입 {X}% / 전개 {Y}% / 정리 {Z}%
+• 교수설계 모델(S4b): {primary_model} + {secondary_model} — GRR: {grr_focus}
 • 참고자료(S5): 로컬({N}개) + NotebookLM({M}개) + 인터넷 리서치
 • Bloom's 발문(S6): 차시별 자동 매핑
 • Gagne 9사태(S6): 체크리스트 (Phase 7 검증)
@@ -377,7 +393,7 @@ S1b pedagogy 폴백:
 - **"변경 필요"** 또는 **Other** 선택 시 → 입력된 변경 사항을 해당 항목에 반영 후 Step 3 진행
   - 변경 형식: `"항목: 값"` (예: `"S0: Day 1, 3"`, `"S1a: PBL"`, `"S1b: 개인 실습, 프로젝트"`)
   - 변경된 항목만 갱신, 나머지는 자동 결정값 유지
-  - S1a 변경 시 → S4(시간 비율), S6(Bloom's 매핑)도 연쇄 재계산
+  - S1a 변경 시 → S4(시간 비율), S4b(교수설계 모델 매핑), S6(Bloom's 매핑)도 연쇄 재계산
 
 ### Step 3: input_data.json 생성
 
