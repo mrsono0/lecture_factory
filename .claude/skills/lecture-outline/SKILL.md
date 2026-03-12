@@ -66,7 +66,7 @@ $ARGUMENTS
 ```
 강의구성안을 위한 탐색적 리서치를 수행하세요.
 
-**지시사항**: `.claude/agents/research-agent/AGENT.md`를 읽고 "강의구성안 탐색적 리서치 (Phase 2) 세부 워크플로우" 섹션을 따르세요.
+**지시사항**: `.claude/agents/research-agent/AGENT.md`를 읽고 라우팅에 따라 `outline-exploration.md`를 로드하여 따르세요.
 
 **입력**: `{output_dir}/input_data.json`
 **스키마 참조**: `.claude/templates/input-schema.json` (필드 의미·유효값 이해용)
@@ -109,7 +109,7 @@ $ARGUMENTS
 ```
 브레인스토밍 결과의 심화 리서치 요청 사항(§7)을 검증하고 자료를 보충하세요.
 
-**지시사항**: `.claude/agents/research-agent/AGENT.md`를 읽고 "강의구성안 심화 리서치 (Phase 4) 세부 워크플로우" 섹션을 따르세요. deep-research 스킬의 8단계 파이프라인을 따릅니다.
+**지시사항**: `.claude/agents/research-agent/AGENT.md`를 읽고 라우팅에 따라 `outline-deep.md`를 로드하여 따르세요. deep-research 스킬의 8단계 파이프라인을 따릅니다.
 
 **입력**: `{output_dir}/brainstorm_result.md`, `{output_dir}/input_data.json`
 **스키마 참조**: `.claude/templates/input-schema.json` (필드 의미·유효값 이해용)
@@ -305,7 +305,7 @@ Phase 7 종료. 사용자에게 검토 요약을 보고한다:
 
 ### Phase 2: 탐색적 리서치 → research-agent
 
-**상세**: `.claude/agents/research-agent/AGENT.md`의 "강의구성안 탐색적 리서치 (Phase 2) 세부 워크플로우" 섹션 참조
+**상세**: `.claude/agents/research-agent/AGENT.md` 라우팅 → `outline-exploration.md` 참조
 
 ### Phase 3: 브레인스토밍 → brainstorm-agent
 
@@ -313,7 +313,7 @@ Phase 7 종료. 사용자에게 검토 요약을 보고한다:
 
 ### Phase 4: 심화 리서치 → research-agent
 
-**상세**: `.claude/agents/research-agent/AGENT.md`의 "강의구성안 심화 리서치 (Phase 4) 세부 워크플로우" 섹션 참조
+**상세**: `.claude/agents/research-agent/AGENT.md` 라우팅 → `outline-deep.md` 참조
 
 ### Phase 5: 아키텍처 설계 → architecture-agent
 
