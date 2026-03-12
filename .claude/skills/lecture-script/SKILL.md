@@ -151,7 +151,7 @@ if all gate_items == PASS:
 
 탐색적 리서치 결과를 기반으로 교안에 필요한 발문, 학습활동, 실생활 사례, Gagne 9사태 구현 방안을 브레인스토밍하세요.
 
-**지시사항**: `.claude/agents/brainstorm-agent/AGENT.md`를 읽고 "강의교안 브레인스토밍 (Phase 3) 세부 워크플로우" 섹션을 따르세요.
+**지시사항**: `.claude/agents/brainstorm-agent/AGENT.md`를 읽고 라우팅에 따라 `script-brainstorm.md`를 로드하여 따르세요.
 
 **스키마 참조**: `.claude/templates/input-schema-script.json` (필드 의미·유효값·관계 이해용)
 **입력**:

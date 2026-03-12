@@ -88,7 +88,7 @@ $ARGUMENTS
 ```
 탐색적 리서치 결과를 기반으로 강의 하위 주제를 발산적으로 도출하고, 다관점 검증을 거쳐 우선순위를 분류하세요.
 
-**지시사항**: `.claude/agents/brainstorm-agent/AGENT.md`를 읽고 "강의구성안 브레인스토밍 (Phase 3) 세부 워크플로우" 섹션을 따르세요.
+**지시사항**: `.claude/agents/brainstorm-agent/AGENT.md`를 읽고 라우팅에 따라 `outline-brainstorm.md`를 로드하여 따르세요.
 
 **입력**: `{output_dir}/input_data.json`, `{output_dir}/research_exploration.md`
 **스키마 참조**: `.claude/templates/input-schema.json` (필드 의미·유효값 이해용)
@@ -309,7 +309,7 @@ Phase 7 종료. 사용자에게 검토 요약을 보고한다:
 
 ### Phase 3: 브레인스토밍 → brainstorm-agent
 
-**상세**: `.claude/agents/brainstorm-agent/AGENT.md`의 "강의구성안 브레인스토밍 (Phase 3) 세부 워크플로우" 섹션 참조
+**상세**: `.claude/agents/brainstorm-agent/AGENT.md` 라우팅 → `outline-brainstorm.md` 참조
 
 ### Phase 4: 심화 리서치 → research-agent
 
