@@ -348,7 +348,7 @@ PBL:        도입 20% (10분) / 전개 70% (35분) / 정리 10% (5분)  (GRR: W
 7. 심화 리서치 요청 사항 (Phase 4 전달용)
 8. Decision Log (ADOPT/REVISE/DROP/MERGE)
 
-상세 워크플로우: `.claude/agents/brainstorm-agent/AGENT.md` "강의교안 브레인스토밍 (Phase 3) 세부 워크플로우" 섹션 참조
+상세 워크플로우: `.claude/agents/brainstorm-agent/AGENT.md` 라우팅 → `script-brainstorm.md` 참조
 
 #### Phase 4: 심화 리서치 상세
 
