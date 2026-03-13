@@ -597,7 +597,7 @@ Phase 6의 차시별 독립 파일을 블록 → 전체로 병합합니다.
 | 2 | 브레인스토밍 | brainstorm-agent | Session 시드 추출(5유형), 4기법(AE변환/6W매핑/범위전환/인터랙션설계) 발산, 2관점(학습자대변인/시간관리자) 검증 → brainstorm_result.md (§1~§7: AE구조/시각화/레이아웃/인터랙션/코드워크스루/Mayer/Decision) |
 | 3 | 구조 설계 | architecture-agent | Middle-out 설계: GRR 1차+콘텐츠 2차 병합 슬라이드 수 결정, 12유형 배정(AE I Do≥80%), GRR 순서+Mayer 분절, 시간 가중 배분, 7항목 검증 → architecture.md (§1~§9) |
 | 4 | 기획안 작성 | writer-agent | GAIDE 5단계 + 세션별 분할, architecture §3 슬라이드 행을 1:1로 4레이어 명세(CONTENT/VISUAL/SPEAKER_NOTE/IMPL_HINT, 25~55줄)로 확장, session 파일 콘텐츠 추출(8패턴), GATE-4 검증 후 병합 → slide_plan.md (§1~§8) |
-| 5 | 품질 검토 | review-agent | 정보 밀도, 시각 계층, 학습목표 정렬, 슬라이드 수 적절성 |
+| 5 | 품질 검토 | review-agent | 세션별+통합 검토, 6영역 41항목(S:구조+D:정보밀도·AE+G:GRR정렬+T:시간·수량+C:Anti-Hallucination+I:도구구현), Mayer/CLT/Naegle 기반 정량 기준, REVISION시 writer-agent 재작성 → quality_review.md |
 
 **설계 원칙**:
 
@@ -1133,7 +1133,7 @@ lectures/
     │   ├── lecture_script.md              # Phase 8 최종 통합 (2차 병합) ★
     │   └── quality_review.md              # Phase 8 최종 ★
     │
-    ├── 03_slide_plan/                     # /slide-planning 산출물 (Phase 1~4 구현)
+    ├── 03_slide_plan/                     # /slide-planning 산출물 (Phase 1~5 구현)
     │   ├── input_data.json                # Phase 1 최종
     │   ├── brainstorm_plan.md             # Phase 2 중간 (시각화 브레인스토밍 계획)
     │   ├── divergent_ideas.md             # Phase 2 중간 (발산 아이디어 원시 목록)
