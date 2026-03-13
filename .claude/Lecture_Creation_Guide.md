@@ -593,8 +593,8 @@ Phase 6의 차시별 독립 파일을 블록 → 전체로 병합합니다.
 
 | Phase | 단계 | 에이전트 | 핵심 작업 |
 |-------|------|---------|----------|
-| 1 | 입력 수집 | input-agent | 교안 로드, 슬라이드 도구(Marp/Slidev/Gamma) 선택 |
-| 2 | 브레인스토밍 | brainstorm-agent | 시각화 아이디어, 레이아웃 패턴 구상, 인터랙션 요소 |
+| 1 | 입력 수집 | input-agent | 교안 3파일 로드 + session 매니페스트 생성, P1~P5 자동 결정(도구/톤/범위/밀도/GRR 기반 슬라이드 수), AskUserQuestion 1회 → input_data.json |
+| 2 | 브레인스토밍 | brainstorm-agent | Session 시드 추출(5유형), 4기법(AE변환/6W매핑/범위전환/인터랙션설계) 발산, 2관점(학습자대변인/시간관리자) 검증 → brainstorm_result.md (§1~§7: AE구조/시각화/레이아웃/인터랙션/코드워크스루/Mayer/Decision) |
 | 3 | 구조 설계 | architecture-agent | 슬라이드 수 결정, 유형 배정, 순서, 시간 배분 |
 | 4 | 기획안 작성 | writer-agent | slide-plan-template.md 기반, 슬라이드별 목적/레이아웃/콘텐츠/시각자료 |
 | 5 | 품질 검토 | review-agent | 정보 밀도, 시각 계층, 학습목표 정렬, 슬라이드 수 적절성 |
