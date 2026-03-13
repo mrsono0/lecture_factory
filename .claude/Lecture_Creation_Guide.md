@@ -684,7 +684,48 @@ GRR 구간별 슬라이드 밀도 (장/분):
 | P3 변경 (Day 지정) | 해당 Day session만 포함, P5 재계산 |
 | 01_outline/input_data.json 없음 | 경고 → 02_script/input_data.json만으로 진행 |
 
-> **구현 상태**: Phase 1 입력 수집 구현 완료 (SKILL.md 오케스트레이터 + input-agent 워크플로우 + 입력 스키마). Phase 2~5 에이전트별 세부 워크플로우 미구현.
+#### Phase 2: 시각화 브레인스토밍 상세
+
+구성안 Phase 3이 "무엇을 가르칠까(What)", 교안 Phase 3이 "어떻게 가르칠까(How)"를 발산했다면, 슬라이드 기획 Phase 2는 **"어떻게 시각화할까(How to visualize)"**를 발산합니다.
+
+- **핵심 차이**: 리서치 Phase 없이 교안 session 파일을 프라이밍 소스로 직접 사용 (교안이 이미 2-Pass Research + 브레인스토밍 + 심화 리서치를 거친 결과물)
+- **Step 0~5 흐름**: 입력 로드(input_data.json + session 시드 추출) → 발산(4기법×4카테고리) → 세션별 매핑 → 다관점 검증(2역할) → AE구조+레이아웃+인터랙션+코드워크스루+Mayer 구체화 → 통합
+
+**슬라이드 기획 특화 4가지 발산 기법**:
+
+| # | 기법 | 생성 대상 |
+|---|------|----------|
+| 1 | AE 변환 (Assertion-Evidence) | 슬라이드 제목(12단어 이내 주장) + 시각 증거 쌍 |
+| 2 | 6W 시각화 매핑 (Dan Roam SQVID) | 시각화 유형 + 레이아웃 패턴 |
+| 3 | 범위 전환 (Macro↔Micro) | 정보 밀도 변주, 분절 전략 |
+| 4 | 인터랙션 설계 | Progressive Disclosure, 코드 하이라이트, 전환 효과 |
+
+**Session 파일 시드 추출** (5가지 시드):
+- 발화문(`> "..."`) → Assertion 제목 후보
+- 코드 블록(` ```...``` `) → 코드 워크스루 대상
+- 발문(`❓`) → 인터랙션 슬라이드 후보
+- 비유/메타포 → 시각화 아이디어 후보
+- 활동 지시(`[...]`) → Activity 슬라이드 후보
+
+**2개 검증 관점** (교안 3개에서 축소 — SLO 정렬·Bloom's·Gagne는 교안에서 확정, 시각적 인지 부하 + 슬라이드 수 현실성만 검증):
+
+| 역할 | 핵심 질문 | 검증 기준 |
+|------|----------|----------|
+| 학습자 대변인 | "3초 내 핵심 메시지 파악 가능?", "인지 부하 과도?" | One Idea Rule, Mayer 원칙, 6×6 규칙, AE 적용률 |
+| 시간 관리자 | "estimated_slides_grr ±30%?", "GRR 밀도 균형?" | session_manifest 대비, 1.5~2.1분/장 기준 |
+
+**산출물 구조** (`brainstorm_result.md` §1~§7):
+1. 세션별 Assertion-Evidence 구조 (GRR 단계별 AE 테이블)
+2. 시각화 아이디어 목록 (6W 분류)
+3. 레이아웃 패턴 배정 (12유형 × 세션)
+4. 인터랙션 요소 목록 (도구별 명세 + marp 대체 방안)
+5. 코드 워크스루 계획 (5패턴: 줄별해설/빌드업/Before→After/에러→수정/확대경)
+6. Mayer 멀티미디어 원칙 적용 가이드 (8원칙 × 슬라이드 지침)
+7. Decision Log (ADOPT/REVISE/DROP/MERGE)
+
+상세 워크플로우: `.claude/agents/brainstorm-agent/AGENT.md` 라우팅 → `slide-planning-brainstorm.md` 참조
+
+> **구현 상태**: Phase 1 입력 수집 + Phase 2 시각화 브레인스토밍 구현 완료 (SKILL.md 오케스트레이터 + 에이전트 워크플로우). Phase 3~5 에이전트별 세부 워크플로우 미구현.
 
 ---
 
@@ -747,9 +788,13 @@ lectures/
     │   ├── lecture_script.md              # Phase 8 최종 통합 (2차 병합) ★
     │   └── quality_review.md              # Phase 8 최종 ★
     │
-    ├── 03_slide_plan/                     # /slide-planning 산출물 (Phase 1 구현)
+    ├── 03_slide_plan/                     # /slide-planning 산출물 (Phase 1~2 구현)
     │   ├── input_data.json                # Phase 1 최종
-    │   ├── brainstorm_result.md           # Phase 2 최종 (미구현)
+    │   ├── brainstorm_plan.md             # Phase 2 중간 (시각화 브레인스토밍 계획)
+    │   ├── divergent_ideas.md             # Phase 2 중간 (발산 아이디어 원시 목록)
+    │   ├── idea_clusters.md               # Phase 2 중간 (세션별 클러스터링)
+    │   ├── review_result.md               # Phase 2 중간 (다관점 검증 + Decision Log)
+    │   ├── brainstorm_result.md           # Phase 2 최종
     │   ├── architecture.md                # Phase 3 최종 (미구현)
     │   ├── slide_plan.md                  # Phase 4 최종 ★ (미구현)
     │   └── quality_review.md              # Phase 5 최종 ★ (미구현)
@@ -839,7 +884,12 @@ lectures/
 | **brainstorm 소재 필수 통합** | 교안 Phase 6 | brainstorm_result.md §1~§6 소재를 레이블이 아닌 발화문으로 통합 — 사례는 스토리텔링, 비유는 풀어쓰기, Gagne 방안은 자연 반영 |
 | **발화문 내용 충실화 + 구어체** | 교안 Phase 6-7 | 분량 제한 없음, GRR 구간별 내용 품질 기준. 친절한 구어체(~해요, ~입니다), 문어체(~한다) 금지. brainstorm 소재 50%+ 미활용 시 Major |
 | **Context7 MCP 기술 문서 통합** | 교안 Phase 5-6-7 | 라이브러리 자동 판별 → resolve-library-id → query-docs → 최신 문서/코드 예제 수집 |
-| **Assertion-Evidence** | 슬라이드 | 주장 제목 + 시각 증거 (불릿포인트 대체) |
+| **Assertion-Evidence** | 슬라이드 기획, 슬라이드 | 주장 제목(12단어 이내) + 시각 증거 (불릿포인트 대체). GRR 단계별 적용률: I Do ≥80%, We Do ≥60%, You Do ≥30% |
+| **Mayer 멀티미디어 8원칙** | 슬라이드 기획 Phase 2 | 일관성(d=1.32), 시간근접(d=1.30), 멀티미디어(d=1.39), 공간근접(d=1.12), 분절화(d=0.98), 중복(d=0.86), 사전훈련(d=0.85), 신호화(d=0.52) — 슬라이드 설계 지침 |
+| **6W+SQVID 시각화 매핑** | 슬라이드 기획 Phase 2 | 콘텐츠를 6W(Who/What/When/Where/How/Why)로 분류 → 최적 시각화 유형 배정 (Dan Roam, Back of the Napkin) |
+| **Progressive Disclosure** | 슬라이드 기획 Phase 2 | v-click, Fragment, 줄별 하이라이트, Magic Move — slide_tool별 인터랙션 매핑 + marp 대체 전략 (분절 슬라이드) |
+| **GRR 시각화 밀도 전략** | 슬라이드 기획 Phase 2 | I Do→풍부 시각(개념·코드·다이어그램), We Do→참여형(발문·부분공개), You Do→최소(과제·체크리스트) |
+| **Presentation Zen SNR** | 슬라이드 기획 Phase 2 | 신호 대 소음 비율 최대화 — 학습 무관 장식 제거, 핵심 정보 시각 강조 |
 
 ---
 
@@ -909,3 +959,11 @@ lectures/
 - PMC Naegle 2021 (Ten Simple Rules for Effective Slides)
 - McGill University Teaching KB (교육용 슬라이드 설계)
 - Marp, Slidev, reveal.js 공식 문서
+
+### 슬라이드 기획 Phase 2 — 시각화 브레인스토밍
+- Garner, J.K. & Alley, M. (2013). How the Design of Presentation Slides Affects Audience Comprehension. Int. J. Engineering Education (AE 그룹 이해도↑, 오개념↓, 인지부하↓, p<.01)
+- Mayer, R.E. (2009). Multimedia Learning, 2nd ed. Cambridge UP (멀티미디어 학습 8원칙 — 효과 크기: 일관성 d=1.32, 시간근접 d=1.30, 멀티미디어 d=1.39, 공간근접 d=1.12 등)
+- Roam, D. (2008). The Back of the Napkin. Penguin (6W+SQVID 프레임워크 — 콘텐츠 유형별 최적 시각화 형식 결정)
+- Fisher, D. & Frey, N. (2008). Better Learning Through Structured Teaching. ASCD (GRR 시각화 전략 — I Do→풍부 시각, You Do→최소 시각 밀도 조절)
+- Tesler, L. & Mott, T. (1980). Progressive Disclosure. IxDF (v-click, 줄별 하이라이트, Magic Move)
+- Reynolds, G. (2019). Presentation Zen, 3rd ed. (신호 대 소음 비율 최대화, SNR 원칙)

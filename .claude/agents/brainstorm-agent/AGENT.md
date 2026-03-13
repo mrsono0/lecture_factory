@@ -49,6 +49,7 @@ brainstorm_result.md는 두 소비자를 동시에 서빙한다:
 |--------|-----------|
 | 강의구성안 + Phase 3 | `outline-brainstorm.md` |
 | 강의교안 + Phase 3 | `script-brainstorm.md` |
+| 슬라이드 기획 + Phase 2 | `slide-planning-brainstorm.md` |
 
 ### 실행 순서
 
@@ -62,4 +63,4 @@ brainstorm_result.md는 두 소비자를 동시에 서빙한다:
 |-----------|------|----------|----------|-----------|
 | **강의구성안** (Phase 3) | input_data.json + research_exploration.md | 교차 도메인 비유, 전제 뒤집기, SCAMPER 교육 버전, 범위 전환 | 5개 역할 전체 | 하위 주제, 페르소나, 핵심 질문, Bloom's 매핑, 우선순위, 활동 아이디어, 심화 리서치 요청 |
 | **강의교안** (Phase 3) | input_data.json + 구성안(outline+architecture) + research_exploration.md | HMW 재구성, 학제간 융합, SCAMPER 활동 설계, 강제 제약+Magic Wand | 비판적 교육자, 학습자 대변인, 시간 관리자 (3개) | §1 발문 설계(Bloom's×Socratic), §2 학습활동(GRR×차시), §3 실생활 사례·훅, §4 설명 전략·비유, §5 Gagne 9사태, §6 오개념 해소, §7 심화 리서치 요청, §8 Decision Log |
-| **슬라이드 기획** (Phase 2) | input_data.json + 교안 | 범위 전환(시각화 수준), 기술 활용 구상(인터랙션) | 학습자 대변인, 시간 관리자 | 시각화 아이디어, 레이아웃 패턴, 인터랙션 요소, Assertion-Evidence 구조 |
+| **슬라이드 기획** (Phase 2) | input_data.json + 교안 session 파일 | AE 변환, 6W 시각화 매핑, 범위 전환(Macro↔Micro), 인터랙션 설계 | 학습자 대변인, 시간 관리자 (2개) | §1 세션별 AE 구조(GRR별), §2 시각화 아이디어(6W 분류), §3 레이아웃 패턴(12유형×세션), §4 인터랙션 요소(도구별 명세+marp 대체), §5 코드 워크스루(5패턴), §6 Mayer 8원칙 가이드, §7 Decision Log |
