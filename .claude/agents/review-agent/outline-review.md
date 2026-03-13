@@ -195,7 +195,7 @@ Step 0: 입력 로드
 | C-8 | 평가 체계 원본 일치 | §6 평가 체계가 architecture §3과 일치 | Major (변경됨) |
 | C-9 | 참고자료 출처 일치 | §8-2 필수 참고자료의 출처가 research_deep 또는 brainstorm_result의 출처 목록에 존재 | Minor (새로 추가된 출처) |
 | C-10 | 산출 범위 반영 | §1-1 기본정보 테이블의 산출 범위가 input_data.json output_scope와 일치하고, 실제 산출물 구성이 output_scope에 부합 | Minor (테이블 불일치), Major (산출물 구성이 output_scope 범위를 벗어남) |
-| C-11 | 실습 환경 반영 | input_data.json lab_environment가 non-null일 때: §1-1 기본정보 테이블에 실습 환경 기재, §5-2 차시 상세의 실습 교시에 해당 도구/환경 명시, §9-2 트러블슈팅에 환경 설정 항목 포함 | Major (lab_environment 존재 시 §5-2 실습에 도구 미명시), Minor (§1-1 또는 §9-2 누락) |
+| C-11 | 실습 환경 반영 | input_data.json lab_environment가 non-null일 때: §1-1 기본정보 테이블에 실습 환경 기재, §5-3 차시 상세의 실습 교시에 해당 도구/환경 명시, §9-2 트러블슈팅에 환경 설정 항목 포함 | Major (lab_environment 존재 시 §5-3 실습에 도구 미명시), Minor (§1-1 또는 §9-2 누락) |
 
 **동작**: 검증 완료 후 C-1~C-11 결과를 `_review_step4.md`에 Write한다.
 

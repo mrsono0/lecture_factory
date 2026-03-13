@@ -109,7 +109,7 @@ $ARGUMENTS
 ```
 브레인스토밍 결과의 심화 리서치 요청 사항(§7)을 검증하고 자료를 보충하세요.
 
-**지시사항**: `.claude/agents/research-agent/AGENT.md`를 읽고 라우팅에 따라 `outline-deep.md`를 로드하여 따르세요. deep-research 스킬의 8단계 파이프라인을 따릅니다.
+**지시사항**: `.claude/agents/research-agent/AGENT.md`를 읽고 라우팅에 따라 `outline-deep.md`를 로드하여 따르세요. deep-research 스킬 방법론의 8단계를 따릅니다.
 
 **입력**: `{output_dir}/brainstorm_result.md`, `{output_dir}/input_data.json`
 **스키마 참조**: `.claude/templates/input-schema.json` (필드 의미·유효값 이해용)
