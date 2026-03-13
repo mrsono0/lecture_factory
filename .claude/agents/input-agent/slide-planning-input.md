@@ -6,7 +6,7 @@
 [시작]
   │
   ├── Step 0: 이전 산출물 탐색 + 로드
-  │     ├─ lectures/*/02_script/lecture_script.md 스캔 → 교안 완료 폴더 목록
+  │     ├─ lectures/*/02_script/block_D*.md 스캔 → 교안 완료 폴더 목록
   │     ├─ 폴더 1개: 자동 선택 확인 / 2개+: 사용자 선택
   │     ├─ architecture.md(02_script) + input_data.json(02_script) 로드
   │     ├─ 01_outline/input_data.json 로드 (존재 시, tone_examples 등)
@@ -34,7 +34,7 @@
 #### 탐색 로직
 
 ```
-1. Glob으로 `lectures/*/02_script/lecture_script.md` 패턴 검색
+1. Glob으로 `lectures/*/02_script/block_D*.md` 패턴 검색 → 폴더별 그룹핑
 2. 결과 0개 → 에러: "교안이 없습니다. /lecture-script를 먼저 실행하세요." → 중단
 3. 결과 1개 → 자동 선택 후 확인:
    "'{폴더명}'의 교안을 사용합니다. 맞습니까?"
@@ -214,7 +214,7 @@ Phase 1에서는 GRR 기반 1차 값만 기록하고, `merge_formula` 필드에 
 | 상황 | 처리 |
 |------|------|
 | 교안 0개 | 에러 + `/lecture-script` 먼저 실행 안내 → 중단 |
-| `lecture_script.md` 없음 | 에러: "교안이 완성되지 않았습니다." → 중단 |
+| `block_D*.md` 없음 | 에러: "교안이 완성되지 않았습니다. /lecture-script를 먼저 실행하세요." → 중단 |
 | `architecture.md` 없음 | 에러 → 중단 (매니페스트 생성 불가) |
 | session 파일 일부 누락 | 경고 → 존재하는 session만 매니페스트 포함 |
 | `03_slide_plan/` 이미 존재 | 덮어쓰기 확인 → Yes: 계속 / No: 중단 |
