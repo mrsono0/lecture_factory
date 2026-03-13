@@ -1,6 +1,6 @@
 ---
 name: lecture-script
-description: 강의교안 생성 - 8단계 파이프라인 (입력수집 → 탐색리서치 → 브레인스토밍 → 심화리서치 → 구조설계 → 블록별작성 → 블록별검토 → 통합)
+description: 강의교안 생성 - 10단계 파이프라인 (입력수집 → 탐색리서치 → 브레인스토밍 → 심화리서치 → 구조설계 → 교안작성 → 교안검토 → 대본생성 → 대본검토 → 블록통합)
 context: fork
 allowed-tools: Agent, Read, Write, Glob, Grep, WebSearch, WebFetch, AskUserQuestion, TodoWrite, mcp__context7__resolve-library-id, mcp__context7__query-docs
 ---
@@ -13,16 +13,16 @@ $ARGUMENTS
 
 ## 오케스트레이터 실행 로직
 
-**당신은 8단계 파이프라인의 오케스트레이터다.** 직접 콘텐츠를 작성하지 않는다. 각 Phase를 Agent 도구로 전담 에이전트에 위임하고, Phase 간 데이터 흐름을 관리한다.
+**당신은 10단계 파이프라인의 오케스트레이터다.** 직접 콘텐츠를 작성하지 않는다. 각 Phase를 Agent 도구로 전담 에이전트에 위임하고, Phase 간 데이터 흐름을 관리한다.
 
 ### Step 0: 초기화
 
 1. `today` = 오늘 날짜 (YYYY-MM-DD 형식)
 2. `project_root` = 현재 작업 디렉토리
 3. `output_dir` = Phase 1 완료 후 결정
-4. TodoWrite로 Phase 1~8을 pending 등록
+4. TodoWrite로 Phase 1~10을 pending 등록
 
-### Phase 1~8 공통 실행 규칙
+### Phase 1~10 공통 실행 규칙
 
 각 Phase 실행 시 반드시:
 1. TodoWrite로 현재 Phase를 `in_progress` 표시
@@ -35,7 +35,7 @@ $ARGUMENTS
 
 ### [CRITICAL] 필수 실행 규칙
 
-> **이 규칙은 Phase 1~8 전체에 적용되며, 어떠한 예외도 허용하지 않는다.**
+> **이 규칙은 Phase 1~10 전체에 적용되며, 어떠한 예외도 허용하지 않는다.**
 
 1. **순차 실행 필수**: Phase N이 완료(GATE 통과)되기 전에 Phase N+1을 시작할 수 없다.
 2. **Phase 병합 금지**: 두 개 이상의 Phase를 하나의 Agent 호출로 합쳐서 실행하지 않는다.
@@ -323,7 +323,7 @@ else:
 
 **GATE-5 전체 통과 → Phase 6 진행 허용**
 
-### Phase 6: 블록별 교안 작성 → writer-agent (full script + 강사대본)
+### Phase 6: 강의교안 콘텐츠 작성 → writer-agent (학습 콘텐츠 전용)
 
 **사전 처리** (오케스트레이터 수행):
 
@@ -350,10 +350,11 @@ else:
 ```
 subagent_type: writer-agent
 prompt: |
-  이전 Phase 산출물을 통합하여 강의교안(full script)을 작성하세요.
+  이전 Phase 산출물을 통합하여 강의교안 콘텐츠를 작성하세요.
+  ★ 이 Phase에서는 학습 콘텐츠만 작성합니다. 강사 발화문(> "...")은 작성하지 않습니다.
 
   **지시사항**: `.claude/agents/writer-agent/AGENT.md`를 읽고
-  라우팅에 따라 `script-write.md`를 로드하여 Step 0~5를 실행하세요.
+  라우팅에 따라 `script-content.md`를 로드하여 Step 0~5를 실행하세요.
 
   **입력**:
   - {output_dir}/architecture.md
@@ -369,7 +370,7 @@ prompt: |
   - **hands-on 차시에서는 I Do에 fenced code block 필수**
 
   **스키마 참조**: `.claude/templates/input-schema-script.json` (script_config 필드 의미·유효값 이해용)
-  **템플릿**: `.claude/templates/script-template.md`
+  **템플릿**: `.claude/templates/script-content-template.md`
   **모드**: single (전체 차시 1회 호출)
   **산출물 방식**: 차시별 독립 파일 Write (Bottom-Up 3계층 — 블록 모드와 동일)
   **산출물**: `{output_dir}/_header.md`, `{output_dir}/session_D{day}-{num}.md` × 세션 수, `{output_dir}/_footer.md`
@@ -411,10 +412,11 @@ prompt: |
 ```
 subagent_type: writer-agent
 prompt: |
-  이전 Phase 산출물을 통합하여 강의교안(full script)을 작성하세요.
+  이전 Phase 산출물을 통합하여 강의교안 콘텐츠를 작성하세요.
+  ★ 이 Phase에서는 학습 콘텐츠만 작성합니다. 강사 발화문(> "...")은 작성하지 않습니다.
 
   **지시사항**: `.claude/agents/writer-agent/AGENT.md`를 읽고
-  라우팅에 따라 `script-write.md`를 로드하여 따르세요.
+  라우팅에 따라 `script-content.md`를 로드하여 따르세요.
 
   **모드**: part ({K}/{N})
   **범위**: §4 블록 {block_id} ({session_list})
@@ -437,15 +439,16 @@ prompt: |
   - **hands-on 차시에서는 I Do에 fenced code block 필수**
 
   **스키마 참조**: `.claude/templates/input-schema-script.json` (script_config 필드 의미·유효값 이해용)
-  **템플릿**: `.claude/templates/script-template.md`
+  **템플릿**: `.claude/templates/script-content-template.md`
   **산출물**: `{output_dir}/session_D{day}-{num}.md` (블록 내 세션 수만큼 각각 Write)
+  **추가 산출물**: `{output_dir}/code_examples_D{day}-{num}.md` (해당 차시가 hands-on이고 50줄 이상 코드가 있는 경우 선택)
 
   **제약**: 도구 Read, Write, Glob만 사용. 외부 검색 없음. Agent 중첩 금지.
 ```
 
 **블록별 미니 검증** (각 블록 Part 완료 후 오케스트레이터 수행):
 1. Glob `{output_dir}/session_D{day}-*.md` → 해당 블록의 차시 파일들 존재 확인
-2. 각 `session_*.md` Read → Gagne 체크 ≥ 7/9 확인
+2. 각 `session_*.md` Read → 도입/I Do/We Do/You Do/정리 5구간 존재 확인
 3. 각 `session_*.md`의 시간 합산이 배정 시간과 일치 확인
 
 **GATE-6** (전체 Part 완료 후 — 모든 항목 PASS 시에만 Phase 7 진행):
@@ -455,12 +458,13 @@ prompt: |
 | G6-1 | `_header.md` 존재 | Glob `{output_dir}/_header.md` | 1개 | 중단 |
 | G6-2 | `_footer.md` 존재 | Glob `{output_dir}/_footer.md` | 1개 | 중단 |
 | G6-3 | `session_D*.md` 파일 수 == len(sessions[]) | Glob `{output_dir}/session_D*.md` + 카운트 | 일치 | 중단 |
-| G6-4 | 각 session Gagne 체크 ≥ 7/9 | Read 각 `session_*.md` | ≥ 7/9 | 중단 |
+| G6-4 | 각 session에 도입/I Do/We Do/You Do/정리 5구간 존재 | Read 각 `session_*.md` | 5구간 | 중단 |
 | G6-5 | 각 session 시간 합산 == 배정 시간 | Read 각 `session_*.md` | 일치 | 중단 |
+| G6-6 | ★ 핵심 예시 최소 2개 존재 (hands-on/concept 차시) | Read 각 해당 `session_*.md` | ≥ 2개 | 중단 |
 
 **GATE-6 전체 통과 → Phase 7 진행 허용**
 
-### Phase 7: 블록별 품질 검토 → review-agent (블록 범위 검증 + 재작성 루프)
+### Phase 7: 교안 콘텐츠 검토 → review-agent (교안 범위 검증 + 재작성 루프)
 
 > **[MANDATORY] `blocks[]` 배열의 모든 블록에 대해 Step 7-1 → 7-2 → 7-3을 전수 실행한다. 블록 생략 불가.**
 
@@ -473,9 +477,9 @@ prompt: |
 
 **블록별 검토 루프** (오케스트레이터가 `blocks[]`의 **각 블록**에 대해 순차 실행):
 
-#### Step 7-1: 블록별 사전 처리 (Context7 검증 기준 수집)
+#### Step 7-1: 블록별 사전 처리 (Context7 코드 정확성 검증 기준 수집)
 
-해당 블록에 content_type == "hands-on" 차시가 1개 이상인 경우:
+해당 블록에 content_type == "hands-on" 차시가 1개 이상인 경우 (코드 정확성은 교안 단계에서 검증):
 1. 해당 블록의 hands-on `session_D{day}-{num}.md` 파일들에서 코드 블록(``` 구간) 추출
    - **코드 블록 0개인 hands-on 차시 발견 시**: 즉시 경고 플래그 설정 (Step 7-2 review-agent에 전달)
 2. 코드에 사용된 주요 API/함수명 식별 (import문, 함수 호출, 클래스명 등)
@@ -492,24 +496,24 @@ prompt: |
 
 #### Step 7-2: review-agent 호출 + 산출물 즉시 확인
 
-review-agent를 호출하고, 반환 후 `_review_block_{block_id}.md` 존재를 **즉시** Glob으로 확인한다.
+review-agent를 호출하고, 반환 후 `_review_content_{block_id}.md` 존재를 **즉시** Glob으로 확인한다.
 파일이 없으면 해당 블록에서 중단하고 사용자에게 보고한다.
 
 ```
 subagent_type: review-agent
 prompt: |
-  블록 {block_id} 세션들의 품질을 검토하세요.
+  블록 {block_id} 교안 콘텐츠의 품질을 검토하세요.
 
   **지시사항**: `.claude/agents/review-agent/AGENT.md`를 읽고
   라우팅에 따라 `script-review.md`를 로드하여
-  **블록별 검토 모드**를 따르세요.
+  **교안 검토 모드**를 따르세요.
 
   **검증 대상**: `{output_dir}/session_D{day}-{num}.md` (해당 블록의 차시 파일들: {session_list})
   **검증 범위**: {block_id} ({session_count}개 세션)
 
   **검증 기준 (교안)**:
-  - `{output_dir}/architecture.md` (Gagne/GRR/발문/전환 설계 기준)
-  - `{output_dir}/brainstorm_result.md` (발문/활동/사례/오개념 원본)
+  - `{output_dir}/architecture.md` (GRR/전환 설계 기준)
+  - `{output_dir}/brainstorm_result.md` (활동/사례/오개념 원본)
   - `{output_dir}/research_deep.md` (확보된 소재, 미해결 항목)
   - `{output_dir}/input_data.json` (교수 모델, 시간 비율, 설정값)
   - `{output_dir}/context7_verify_{block_id}.md` (존재 시 — 코드 API 공식 시그니처 검증 기준)
@@ -520,14 +524,14 @@ prompt: |
 
   **스키마 참조**: `.claude/templates/input-schema-script.json` (script_config 필드 의미·유효값 이해용)
 
-  **산출물**: `{output_dir}/_review_block_{block_id}.md`
+  **산출물**: `{output_dir}/_review_content_{block_id}.md`
 
-  **검증 영역 (블록 범위, ~44항목)**:
-  1. 교수설계 프레임워크 (G-1~G-8): Gagne 9사태, GRR 4단계, 2-레이어, Think-Aloud, 15분 분절
-  2. 발문/평가/흐름 (P-1~P-7): Bloom's 발문 수준, CMU 3점, 차시 간 전환
+  **검증 영역 (교안 범위)**:
+  1. 교수설계 프레임워크 (G-1~G-6): GRR 4단계, 2-레이어, 15분 분절, 도입/I Do/We Do/You Do/정리 5구간
+  2. 학습활동/흐름 (P-1~P-5): CMU 3점, 차시 간 전환, You Do 완전성
   3. 시간 배분 (T-1~T-8): 교시 시간 합산, 비율 준수, GRR 시간, 시간큐
-  4. 콘텐츠 정확성 (C-1~C-12): Anti-Hallucination, CLO/SLO 일치, 소재 근거, 코드 API 정확성(C-10), 코드 콘텐츠 밀도(C-11), 플레이스홀더 잔존(C-12)
-  5. 교안 실행 품질 (N-1~N-9): 발화문 자연성, 활동 3요소
+  4. 콘텐츠 정확성 (C-1~C-12): Anti-Hallucination, CLO/SLO 일치, 소재 근거, 코드 API 정확성(C-10), 다중 예시 완전성(C-11), 플레이스홀더 잔존(C-12)
+  5. 교안 콘텐츠 품질 (N-1~N-6): 활동 3요소, You Do 완전성, 핵심 예시 충분성
 
   **판정 기준**: PASS (Major=0, Minor≤3) / CONDITIONAL PASS (Major=0, Minor≥4) / REVISION REQUIRED (Major≥1)
 
@@ -536,7 +540,7 @@ prompt: |
 
 #### Step 7-3: 판정 분기
 
-1. `_review_block_{block_id}.md` Read → 판정 결과 추출
+1. `_review_content_{block_id}.md` Read → 판정 결과 추출
 2. **PASS 또는 CONDITIONAL PASS** → 다음 블록으로 진행
 3. **REVISION_REQUIRED** → writer-agent 재작성 1회 → review-agent 재검토 1회:
    - 재검토 후에도 REVISION_REQUIRED → 사용자에게 보고 후 **중단**
@@ -549,15 +553,15 @@ prompt: |
   블록 {block_id}의 Major 위반을 수정하여 해당 세션만 재작성하세요.
 
   **지시사항**: `.claude/agents/writer-agent/AGENT.md`를 읽고
-  라우팅에 따라 `script-write.md`를 로드하여 **revision 모드**를 따르세요.
+  라우팅에 따라 `script-content.md`를 로드하여 **revision 모드**를 따르세요.
 
   **모드**: revision
   **범위**: 블록 {block_id} ({session_list})
-  **수정 가이드**: `{output_dir}/_review_block_{block_id}.md`
+  **수정 가이드**: `{output_dir}/_review_content_{block_id}.md`
 
   **입력**:
   - {output_dir}/session_D{day}-{num}.md (해당 블록의 차시 파일들)
-  - {output_dir}/_review_block_{block_id}.md (Major 위반 목록 + 수정 가이드)
+  - {output_dir}/_review_content_{block_id}.md (Major 위반 목록 + 수정 가이드)
   - {output_dir}/architecture.md
   - {output_dir}/brainstorm_result.md
   - {output_dir}/input_data.json
@@ -571,67 +575,148 @@ prompt: |
 
 | ID | 검증 내용 | 방법 | 기준 | 실패 시 |
 |----|----------|------|------|--------|
-| G7-1 | `_review_block_*.md` 파일 수 == len(blocks[]) | Glob + 카운트 | 일치 | 중단 |
-| G7-2 | 각 판정 != REVISION_REQUIRED | Read 각 `_review_block_*.md` | 전체 PASS 또는 CONDITIONAL | 중단 |
+| G7-1 | `_review_content_*.md` 파일 수 == len(blocks[]) | Glob + 카운트 | 일치 | 중단 |
+| G7-2 | 각 판정 != REVISION_REQUIRED | Read 각 `_review_content_*.md` | 전체 PASS 또는 CONDITIONAL | 중단 |
 | G7-3 | blocks[] 전체 블록 ID가 파일명에 매칭 | Glob 패턴 대조 | 전체 일치 | 중단 |
 
 **GATE-7 전체 통과 → Phase 8 진행 허용**
 
 ---
 
-### Phase 8: 통합 + 최종 검토 → review-agent (구조 완전성 + 블록 간 일관성)
+### Phase 8: 강사대본 생성 → writer-agent (교안 기반 전달 스크립트)
 
-> **[MANDATORY] Step 8-1 → 8-2 → 8-3 순서 실행, 생략 불가. 각 Step의 GATE를 통과해야 다음 Step 진행.**
+> **[MANDATORY] Phase 7(교안 검토) GATE-7 통과 후 실행. blocks[] 배열의 모든 블록에 대해 전수 실행한다.**
 
 **사전 처리** (오케스트레이터 수행):
-- 모든 `_review_block_*.md` Read → 블록별 판정 요약 수집
+1. Phase 7(교안 검토)에서 PASS/CONDITIONAL PASS 확인
+2. 모든 `session_D*.md` 파일 목록 확보
+3. `architecture.md` §3에서 시간 배분 정보 추출
+4. `blocks[]` 배열 재사용 (Phase 6과 동일 분할)
 
-#### Step 8-1: 1차 병합 (session → block)
+**단일/블록별 Agent 호출**:
 
-오케스트레이터가 직접 Read+Write로 수행:
-1. 각 블록에 대해 해당 `session_D{day}-{num}.md` 파일들을 Read
-2. Day 헤딩(`### Day {N}: {테마}`)을 삽입하고 세션들을 순서대로 결합
-3. `block_D{day}_{AM|PM}.md`로 Write (블록 헤더 + 세션 교안 + 블록 요약)
+```
+subagent_type: writer-agent
+prompt: |
+  강의교안 콘텐츠를 기반으로 **강사대본**을 생성하세요.
+  ★ 교안의 학습 콘텐츠를 강사가 실제 말할 발화문으로 변환합니다.
 
-**GATE-8-1**:
+  **지시사항**: `.claude/agents/writer-agent/AGENT.md`를 읽고
+  라우팅에 따라 `script-narration.md`를 로드하여 따르세요.
+
+  **모드**: {single 또는 part (K/N)}
+  **범위**: {해당 블록/전체}
+
+  **입력**:
+  - {output_dir}/session_D{day}-{num}.md (교안 콘텐츠 — Phase 6 산출물)
+  - {output_dir}/architecture.md (시간 배분)
+  - {output_dir}/brainstorm_result.md §1(발문), §3(훅/사례)
+  - {output_dir}/input_data.json (tone, 교수 모델)
+  - {output_dir}/code_examples_D{day}-{num}.md (존재 시)
+
+  **Overlap 컨텍스트**: {이전 블록 마지막 narration 정리 섹션, 첫 블록이면 "없음"}
+
+  **스키마 참조**: `.claude/templates/input-schema-script.json`
+  **템플릿**: `.claude/templates/script-narration-template.md`
+  **산출물**: `{output_dir}/narration_D{day}-{num}.md` × 세션 수
+
+  **제약**: Read, Write, Glob만 사용. 외부 검색 없음. Agent 중첩 금지.
+```
+
+**블록별 미니 검증** (각 블록 완료 후):
+1. Glob으로 해당 블록의 narration_D*.md 존재 확인
+2. 각 narration 파일에 도입/전개/정리 3구간 존재 확인
+
+**GATE-8**:
 
 | ID | 검증 내용 | 방법 | 기준 | 실패 시 |
 |----|----------|------|------|--------|
-| G8-1a | `block_*.md` 파일 수 == len(blocks[]) | Glob + 카운트 | 일치 | 중단 |
-| G8-1b | 각 block 파일 비어있지 않음 | Read 각 `block_*.md` | 내용 존재 | 중단 |
+| G8-1 | narration_D*.md 파일 수 == len(sessions[]) | Glob + 카운트 | 일치 | 중단 |
+| G8-2 | 각 narration에 도입/전개/정리 존재 | Read 각 narration | 3구간 | 중단 |
 
-**GATE-8-1 실패 → Step 8-2 진행 불가**
+**GATE-8 전체 통과 → Phase 9 진행 허용**
 
-#### Step 8-2: 2차 병합 (block → lecture_script.md)
+---
 
-오케스트레이터가 직접 Read+Write로 수행:
-1. `_header.md` Read → 상단 (메타데이터 + §1~§3 + §4 Day 헤딩 골격)
-2. `block_*.md` 파일들을 블록 순서대로 Read → §4 본문
-3. `_footer.md` Read → 하단 (§5~§8)
-4. `lecture_script.md`에 Write — script-template.md 구조의 완전한 단일 문서
+### Phase 9: 대본 품질 검토 → review-agent (대본 검토)
 
-**GATE-8-2**:
+> **[MANDATORY] `blocks[]` 배열의 모든 블록에 대해 전수 실행한다. 블록 생략 불가.**
 
-| ID | 검증 내용 | 방법 | 기준 | 실패 시 |
-|----|----------|------|------|--------|
-| G8-2a | `lecture_script.md` 존재 | Glob `{output_dir}/lecture_script.md` | 1개 | 중단 |
-| G8-2b | §1~§8 헤더 존재 | Grep `lecture_script.md`에서 `§1`~`§8` 패턴 | 8개 섹션 헤더 | 중단 |
-
-**GATE-8-2 실패 → Step 8-3 진행 불가**
-
-#### Step 8-3: 통합 검토 (review-agent)
+**블록별 검토 루프** (blocks[] 각 블록에 대해 순차):
 
 ```
 subagent_type: review-agent
 prompt: |
-  lecture_script.md의 전체 통합 품질을 최종 검토하세요.
+  블록 {block_id} 대본의 품질을 검토하세요.
+
+  **지시사항**: `.claude/agents/review-agent/AGENT.md`를 읽고
+  라우팅에 따라 `script-review.md`를 로드하여
+  **대본 검토 모드**를 따르세요.
+
+  **검증 대상**: `{output_dir}/narration_D{day}-{num}.md` (해당 블록 차시들)
+  **교안 기준**: `{output_dir}/session_D{day}-{num}.md` (교안 참조 정합 확인용)
+  **검증 기준**: `{output_dir}/architecture.md`, `{output_dir}/input_data.json`
+
+  **산출물**: `{output_dir}/_review_narration_{block_id}.md`
+
+  **제약**: Read, Write만 사용. Agent 중첩 금지.
+```
+
+**판정 분기**:
+- PASS/CONDITIONAL PASS → 다음 블록
+- REVISION_REQUIRED → writer-agent 재작성 1회 → 재검토 1회
+  - 재검토 후에도 REVISION_REQUIRED → 사용자 보고 + 중단
+
+**GATE-9**:
+
+| ID | 검증 내용 | 방법 | 기준 | 실패 시 |
+|----|----------|------|------|--------|
+| G9-1 | `_review_narration_*.md` 파일 수 == len(blocks[]) | Glob + 카운트 | 일치 | 중단 |
+| G9-2 | 각 판정 != REVISION_REQUIRED | Read 각 `_review_narration_*.md` | 전체 PASS/CONDITIONAL | 중단 |
+
+**GATE-9 전체 통과 → Phase 10 진행 허용**
+
+---
+
+### Phase 10: 블록 통합 + 최종 검토 → review-agent (구조 완전성 + 블록 간 일관성)
+
+> **[MANDATORY] Step 10-1 → 10-2 순서 실행, 생략 불가. 각 Step의 GATE를 통과해야 다음 Step 진행.**
+
+**사전 처리** (오케스트레이터 수행):
+- 모든 `_review_content_*.md` Read → 블록별 판정 요약 수집
+
+#### Step 10-1: 블록 병합 (session + narration → block)
+
+오케스트레이터가 직접 Read+Write로 수행:
+1. 각 블록에 대해 해당 `session_D{day}-{num}.md` (교안) 파일들을 Read
+2. 해당 블록의 `narration_D{day}-{num}.md` (대본) 파일들을 Read
+3. 교안 본문에 대본을 `> 🎤 대본` 인용 블록으로 삽입하여 통합
+4. Day 헤딩(`### Day {N}: {테마}`)을 삽입하고 세션들을 순서대로 결합
+5. `block_D{day}_{AM|PM}.md`로 Write (블록 헤더 + 교안+대본 통합 내용 + 블록 요약)
+
+**GATE-10-1**:
+
+| ID | 검증 내용 | 방법 | 기준 | 실패 시 |
+|----|----------|------|------|--------|
+| G10-1a | `block_*.md` 파일 수 == len(blocks[]) | Glob + 카운트 | 일치 | 중단 |
+| G10-1b | 각 block 파일 비어있지 않음 | Read 각 `block_*.md` | 내용 존재 | 중단 |
+
+**GATE-10-1 실패 → Step 10-2 진행 불가**
+
+#### Step 10-2: 통합 검토 (review-agent)
+
+```
+subagent_type: review-agent
+prompt: |
+  block_D*.md 파일들의 전체 통합 품질을 최종 검토하세요.
 
   **지시사항**: `.claude/agents/review-agent/AGENT.md`를 읽고
   라우팅에 따라 `script-review.md`를 로드하여
   **통합 검토 모드**를 따르세요.
 
-  **검증 대상**: `{output_dir}/lecture_script.md` (전체)
-  **블록별 검토 결과**: `{output_dir}/_review_block_*.md`
+  **검증 대상**: `{output_dir}/block_D*.md` (전체 블록 파일들)
+  **교안 검토 결과**: `{output_dir}/_review_content_*.md`
+  **대본 검토 결과**: `{output_dir}/_review_narration_*.md`
 
   **검증 기준 (교안)**:
   - `{output_dir}/architecture.md`
@@ -648,28 +733,27 @@ prompt: |
   **산출물**: `{output_dir}/quality_review.md`
 
   **통합 검증 영역 (~15항목)**:
-  1. 구조 완전성 (S-1~S-7): §1~§8 전체 존재, 표기법, 서브섹션, 차시 커버리지
+  1. 구조 완전성 (S-1~S-5): 블록 파일 전체 존재, 표기법, 서브섹션, 차시 커버리지
   2. 블록 간 전환 일관성: AM→PM, Day간 전환 문구 자연스러움
-  3. SLO 커버리지 전체 확인: 모든 SLO가 §4에서 다뤄지는지
-  4. 형성평가 집계 정합: §5 집계 = §4 인라인 합계
-  5. 발문 모음 정합: §6 발문 = §4 인라인 발문
-  6. 용어/표기 통일: 전체 문서 일관성
+  3. SLO 커버리지 전체 확인: 모든 SLO가 블록 파일에서 다뤄지는지
+  4. 교안-대본 정합성: 교안 콘텐츠와 대본 발화문의 내용 일관성
+  5. 용어/표기 통일: 전체 문서 일관성
 
   **판정 기준**: PASS (Major=0, Minor≤3) / CONDITIONAL PASS (Major=0, Minor≥4) / REVISION REQUIRED (Major≥1)
 
   **제약**: 도구 Read, Write만 사용. 외부 검색 없음. Agent 중첩 금지.
 ```
 
-**GATE-8-3**:
+**GATE-10-2**:
 
 | ID | 검증 내용 | 방법 | 기준 | 실패 시 |
 |----|----------|------|------|--------|
-| G8-3a | `quality_review.md` 존재 | Glob `{output_dir}/quality_review.md` | 1개 | 중단 |
-| G8-3b | 판정 결과 추출 가능 | Read `quality_review.md` → 판정 추출 | PASS/CONDITIONAL/REVISION 중 하나 | 중단 |
-| G8-3c | `block_*.md` 파일 존재 유지 | Glob `{output_dir}/block_*.md` | len(blocks[])개 | 중단 |
+| G10-2a | `quality_review.md` 존재 | Glob `{output_dir}/quality_review.md` | 1개 | 중단 |
+| G10-2b | 판정 결과 추출 가능 | Read `quality_review.md` → 판정 추출 | PASS/CONDITIONAL/REVISION 중 하나 | 중단 |
+| G10-2c | `block_*.md` 파일 존재 유지 | Glob `{output_dir}/block_*.md` | len(blocks[])개 | 중단 |
 
-**GATE-8-3 통과 후 판정에 따라 후속 조치 안내**:
-- **PASS**: "교안 품질 검토 통과. lecture_script.md가 확정되었습니다."
+**GATE-10-2 통과 후 판정에 따라 후속 조치 안내**:
+- **PASS**: "교안+대본 품질 검토 통과. block_D*.md 파일들이 확정되었습니다."
 - **CONDITIONAL PASS**: "Minor 위반 {N}개 발견. quality_review.md를 확인하여 부분 수정을 권고합니다."
 - **REVISION REQUIRED**: "Major 위반 {N}개 발견. quality_review.md의 수정 가이드에 따라 해당 섹션을 재작성해야 합니다."
 
@@ -677,19 +761,21 @@ prompt: |
 
 ```
 lectures/YYYY-MM-DD_{강의명}/02_script/
-├── input_data.json                 # Phase 1: 구성안 로드 + 교수법 선택 + 자동 결정
-├── research_exploration.md         # Phase 2: 탐색적 리서치
-├── brainstorm_result.md            # Phase 3: 브레인스토밍
-├── research_deep.md                # Phase 4: 심화 리서치
-├── context7_reference.md           # Phase 5: 기술 문서 참조 (기술 교육 시)
-├── architecture.md                 # Phase 5: 교안 구조 설계
-├── _header.md                      # Phase 6: §1~§3 머리말 (Part 0)
-├── session_D1-1.md ~ D{N}-{M}.md  # Phase 6: 차시별 독립 교안 ★ (Part 1~B)
-├── _footer.md                      # Phase 6: §5~§8 꼬리말 (Part N)
-├── context7_block_{block_id}.md    # Phase 6: 블록별 정밀 기술 문서 (기술 교육 시)
-├── context7_verify_{block_id}.md   # Phase 7: 블록별 코드 검증 기준 (기술 교육 시)
-├── _review_block_{block_id}.md     # Phase 7: 블록별 검토 결과 (동적 생성)
-├── block_D{day}_{AM|PM}.md        # Phase 8: 블록별 통합 (1차 병합) ★
-├── lecture_script.md               # Phase 8: 최종 통합 (2차 병합) ★
-└── quality_review.md               # Phase 8: 최종 품질 검토 ★
+├── input_data.json                      # Phase 1: 구성안 로드 + 교수법 선택 + 자동 결정
+├── research_exploration.md              # Phase 2: 탐색적 리서치
+├── brainstorm_result.md                 # Phase 3: 브레인스토밍
+├── research_deep.md                     # Phase 4: 심화 리서치
+├── context7_reference.md                # Phase 5: 기술 문서 참조 (기술 교육 시)
+├── architecture.md                      # Phase 5: 교안 구조 설계
+├── _header.md                           # Phase 6: §1~§3 머리말 (Part 0)
+├── session_D1-1.md ~ D{N}-{M}.md       # Phase 6: 차시별 독립 교안 콘텐츠 ★ (Part 1~B)
+├── _footer.md                           # Phase 6: §5~§8 꼬리말 (Part N)
+├── code_examples_D{day}-{num}.md        # Phase 6: 50줄+ 코드 모음 [신규, 선택]
+├── context7_block_{block_id}.md         # Phase 6: 블록별 정밀 기술 문서 (기술 교육 시)
+├── context7_verify_{block_id}.md        # Phase 7: 블록별 코드 검증 기준 (기술 교육 시)
+├── _review_content_{block_id}.md        # Phase 7: 교안 검토 결과 [변경]
+├── narration_D1-1.md ~ D{N}-{M}.md     # Phase 8: 차시별 강사대본 ★ [신규]
+├── _review_narration_{block_id}.md      # Phase 9: 대본 검토 결과 [신규]
+├── block_D{day}_{AM|PM}.md             # Phase 10: 교안+대본 통합 ★ 최종 [변경]
+└── quality_review.md                    # Phase 10: 최종 품질 검토 ★
 ```

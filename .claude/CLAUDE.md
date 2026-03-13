@@ -26,7 +26,7 @@ lectures/
 | 워크플로우 | 폴더 | 최종 산출물 |
 |-----------|------|-----------|
 | `/lecture-outline` | `01_outline/` | `lecture_outline.md`, `macro_outline.md` |
-| `/lecture-script` | `02_script/` | `lecture_script.md` |
+| `/lecture-script` | `02_script/` | `block_D{day}_{AM\|PM}.md` (교안+대본 통합 블록) |
 | `/slide-planning` | `03_slide_plan/` | `slide_plan.md` |
 | `/slide-generation` | `04_slides/` | `slides.md` |
 
@@ -35,8 +35,8 @@ lectures/
 1. **폴더 자동 생성**: Phase 1(input-agent)에서 강의 루트 폴더 + 해당 워크플로우 폴더를 생성
 2. **이전 단계 참조**: 각 워크플로우는 이전 단계 폴더의 최종 산출물을 입력으로 로드
    - `/lecture-script` → `01_outline/lecture_outline.md` 참조
-   - `/slide-planning` → `02_script/lecture_script.md` 참조
+   - `/slide-planning` → `02_script/block_D*.md` 참조
    - `/slide-generation` → `03_slide_plan/slide_plan.md` 참조
 3. **중간 산출물 보존**: 각 Phase의 중간 산출물도 해당 폴더에 저장 (디버깅·재실행 용도)
 4. **input_data.json**: 각 워크플로우 폴더에 독립적으로 생성 (워크플로우별 입력이 다름)
-5. **차시별 중간 산출물**: `/lecture-script` Phase 6은 차시별 독립 파일(`session_D{day}-{num}.md`)로 작성 후 Phase 8에서 블록(`block_D{day}_{AM|PM}.md`) → 최종(`lecture_script.md`)으로 병합
+5. **차시별 중간 산출물**: `/lecture-script` Phase 6은 교안 콘텐츠(`session_D{day}-{num}.md`), Phase 8은 강사대본(`narration_D{day}-{num}.md`)을 차시별 독립 파일로 작성 후 Phase 10에서 교안+대본을 블록(`block_D{day}_{AM|PM}.md`)으로 통합

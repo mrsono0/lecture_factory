@@ -45,7 +45,7 @@ $ARGUMENTS
 **지시사항**: `.claude/agents/input-agent/AGENT.md`를 읽고 라우팅에 따라 `slide-planning-input.md`를 로드하여 따르세요.
 
 **핵심 원칙**:
-- Step 0: lectures/ 스캔 → 교안 폴더 선택 → 3개 파일 로드 → session 매니페스트 생성
+- Step 0: lectures/ 스캔 (block_D*.md 존재 확인) → 교안 폴더 선택 → 3개 파일 로드 → session 매니페스트 생성
 - Step 1: P1~P5 전체 자동 결정 (질문 없음)
   - P1: content_type + lab_environment 분석 → 슬라이드 도구 (marp/slidev)
   - P2: tone/tone_examples 분석 → 디자인 톤 (friendly_visual/professional)
