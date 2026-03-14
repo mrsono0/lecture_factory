@@ -738,9 +738,59 @@ prompt: |
 오케스트레이터가 직접 Read+Write로 수행:
 1. 각 블록에 대해 해당 `session_D{day}-{num}.md` (교안) 파일들을 Read
 2. 해당 블록의 `narration_D{day}-{num}.md` (대본) 파일들을 Read
-3. 교안 본문에 대본을 `> 🎤 대본` 인용 블록으로 삽입하여 통합
+3. **GRR 구간별 인터리빙 병합**: 교안의 각 구간(도입/I Do/We Do/You Do/정리) 바로 아래에 해당 대본을 삽입
 4. Day 헤딩(`### Day {N}: {테마}`)을 삽입하고 세션들을 순서대로 결합
 5. `block_D{day}_{AM|PM}.md`로 Write (블록 헤더 + 교안+대본 통합 내용 + 블록 요약)
+
+**인터리빙 병합 형식** (각 차시 내부 구조):
+
+```markdown
+## 도입 ({분}분)
+{교안 도입 내용}
+
+> 🎤 **도입 대본**
+> {narration 도입 발화문}
+
+---
+
+## I Do: 시범/설명 ({분}분)
+{교안 I Do 내용}
+
+> 🎤 **I Do 대본**
+> {narration I Do 발화문}
+
+---
+
+## We Do: 안내 실습 ({분}분)
+{교안 We Do 내용}
+
+> 🎤 **We Do 대본**
+> {narration We Do 발화문}
+
+---
+
+## You Do: 독립 실습 ({분}분)
+{교안 You Do 내용}
+
+> 🎤 **You Do 대본**
+> {narration You Do 발화문}
+
+---
+
+## 정리 ({분}분)
+{교안 정리 내용}
+
+> 🎤 **정리 대본**
+> {narration 정리 발화문}
+```
+
+**병합 매칭 규칙**:
+- narration의 `## 도입` → 교안의 `## 도입` 뒤에 삽입
+- narration의 `### I Do` → 교안의 `## I Do` 뒤에 삽입
+- narration의 `### We Do` → 교안의 `## We Do` 뒤에 삽입
+- narration의 `### You Do` → 교안의 `## You Do` 뒤에 삽입
+- narration의 `## 정리` → 교안의 `## 정리` 뒤에 삽입
+- 매칭 실패 시: 해당 narration 구간을 교안 마지막에 `> 🎤 대본 (매칭 실패)` 블록으로 추가
 
 **GATE-10-1**:
 
