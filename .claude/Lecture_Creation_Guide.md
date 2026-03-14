@@ -186,7 +186,7 @@ Phase 5(아키텍처 설계)에서 일별 시간표를 자동 생성하여 Phase
 - **워크플로우 폴더**: `{단계번호}_{단계이름}/` (예: `01_outline/`, `02_script/`, `03_slide_plan/`, `04_slides/`)
 - **최종 산출물**: `{워크플로우}_{유형}.md` (예: `lecture_outline.md`, `block_D{day}_{AM|PM}.md`, `slide_plan.md`)
 - **중간 산출물**: `{Phase역할}_{내용}.md` (예: `research_exploration.md`, `brainstorm_result.md`, `research_deep.md`)
-- **검토 중간**: `_review_step{N}.md` (구성안: N=1~4), `_review_block_{block_id}.md` (교안: 블록별)
+- **검토 중간**: `_review_step{N}.md` (구성안: N=1~4), `_review_content_{block_id}.md` (교안: 블록별)
 - 상세 파일 목록은 각 SKILL.md의 산출물 섹션 참조
 
 **데이터 흐름**:
@@ -1169,7 +1169,7 @@ lectures/
     │   ├── _footer.md                     # Phase 6 꼬리말 (§5~§8)
     │   ├── [context7_block_{block_id}.md] # Phase 6 블록별 정밀 기술 문서 (기술 교육 시)
     │   ├── [context7_verify_{block_id}.md]# Phase 7 블록별 코드 검증 기준 (기술 교육 시)
-    │   ├── _review_block_{block_id}.md    # Phase 7 블록별 검토 결과 (동적)
+    │   ├── _review_content_{block_id}.md   # Phase 7 블록별 검토 결과 (동적)
     │   ├── narration_D1-1.md ~ D{N}-{M}.md# Phase 8 차시별 강사대본 ★
     │   ├── block_D{day}_{AM|PM}.md        # Phase 10 블록 통합 (교안+대본) ★
     │   └── quality_review.md              # Phase 10 최종 ★
