@@ -734,12 +734,23 @@ prompt: |
 
 #### Step 10-1: 블록 병합 (session + narration → block)
 
-오케스트레이터가 직접 Read+Write로 수행:
-1. 각 블록에 대해 해당 `session_D{day}-{num}.md` (교안) 파일들을 Read
-2. 해당 블록의 `narration_D{day}-{num}.md` (대본) 파일들을 Read
-3. **GRR 구간별 인터리빙 병합**: 교안의 각 구간(도입/I Do/We Do/You Do/정리) 바로 아래에 해당 대본을 삽입
-4. Day 헤딩(`### Day {N}: {테마}`)을 삽입하고 세션들을 순서대로 결합
-5. `block_D{day}_{AM|PM}.md`로 Write (블록 헤더 + 교안+대본 통합 내용 + 블록 요약)
+오케스트레이터가 **Bash 도구로 병합 스크립트를 실행**:
+
+```bash
+python3 .claude/scripts/merge-blocks.py {output_dir} all
+```
+
+**[CRITICAL] worker-agent로 병합하지 않는다.**
+블록 병합은 텍스트 구조 변환이며 블록당 입력이 90~170KB로
+에이전트의 출력 토큰 한계를 초과한다. 반드시 스크립트로 실행한다.
+
+스크립트 동작:
+1. `{output_dir}/session_D*.md` glob으로 세션 목록 자동 수집
+2. Day별 AM/PM 블록 자동 분할 (sessions_in_day ≥ 6이면 분할)
+3. 각 세션의 `session_D*.md` + `narration_D*.md`를 Read
+4. **GRR 구간별 인터리빙 병합**: 교안의 각 구간(도입/I Do/We Do/You Do/정리) 바로 아래에 해당 대본을 `> 🎤` 블록으로 삽입
+5. 비표준 narration 헤딩("발표 진행", "전개" 등)은 폴백 매핑으로 자동 매칭
+6. `block_D{day}_{AM|PM}.md`로 Write
 
 **인터리빙 병합 형식** (각 차시 내부 구조):
 
@@ -802,6 +813,9 @@ prompt: |
 |----|----------|------|------|--------|
 | G10-1a | `block_*.md` 파일 수 == len(blocks[]) | Glob + 카운트 | 일치 | 중단 |
 | G10-1b | 각 block 파일 비어있지 않음 | Read 각 `block_*.md` | 내용 존재 | 중단 |
+| G10-1c | 🎤 대본 수 하한 | Bash: `grep -c '🎤' block_*.md` | ≥ sessions × 4 × 0.8 | 스크립트 재실행 |
+| G10-1d | 인터리빙 순서 | Bash: 첫 🎤 행번호 < 첫 `## I Do` 행번호 | 전체 블록 참 | 스크립트 재실행 |
+| G10-1e | 세션 전수 포함 | Bash: `grep -c '# D[0-9]-[0-9]:'` | == len(sessions[]) | 스크립트 재실행 |
 
 **GATE-10-1 실패 → Step 10-2 진행 불가**
 
